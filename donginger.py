@@ -89,8 +89,9 @@ if __name__ == '__main__':
 	
 	dong = Dong()
 	parseConf()
-	con = TelnetConnector()
 	dong.db = DB()
+	con = TelnetConnector()
+	proc = Processor()
 
 	while True:
 		try:
