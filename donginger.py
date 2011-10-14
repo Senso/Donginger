@@ -5,7 +5,6 @@ import sys
 import json
 import telnetlib
 import sqlite3 as sqlite
-from xml.etree.ElementTree import ElementTree
 
 # Local imports
 from twit import Twit
@@ -65,8 +64,17 @@ class Processor:
 	
 	def parser(self):
 		buf = self.con.read_until('\n')
-		self.line = buf.split(" ", 3)
+		line = buf.split(" ", 3)
 		
+		# This makes sure Donginger does not catch what he says
+		if line[0] == dong.config['bot_objnum'] and line[1] != dong.config['bot_objnum']:
+			cmd = line[2]
+			args = line[3]
+			if cmd in dong.commands.keys():
+				self.dispatch(cmd, args)
+				
+	def dispatch(self, cmd, args):
+		pass
 	
 
 if __name__ == '__main__':
