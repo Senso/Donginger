@@ -1,9 +1,9 @@
 import twitter
 
 class Twit:
-	def __init__(self, bot):
+	def __init__(self, conf):
 		self.bot = bot
-		self.api = twitter.Api(consumer_key=bot.modules['twitter']['consumer_key'],consumer_secret=bot.modules['twitter']['consumer_secret'],access_token_key=bot.modules['twitter']['access_token_key'],access_token_secret=bot.modules['twitter']['access_token_secret'])
+		self.api = twitter.Api(consumer_key=conf['consumer_key'],consumer_secret=conf['consumer_secret'],access_token_key=conf['access_token_key'],access_token_secret=conf['access_token_secret'])
 		
 	def remove_unicode(self, str):
 		newstr = ''
