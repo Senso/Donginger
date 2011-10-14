@@ -21,6 +21,20 @@ class Twit:
 			return ', '.join(derp)
 		except: return ''
 		
+	def getRandomTags(self):
+		num = random.randrange(1,4)
+		tags = []
+		for i in range(1, num):
+			self.dong.db.cu.execute("select * from twitags order by random() limit 1")
+			tag = dba.cu.fetchone()
+			if tag[0] not in tags:
+				if tag[0][0] == '#':
+					tags.append(tag[0])
+				else:
+					tags.append('#' + tag[0])
+		if tags:
+			return ' '.join(tags)
+		
 	def randomTweet(self, msg):
 		self.dong.db.cu.execute("select * from hitlist order by random() limit 1")
 		target = self.dong.db.cu.fetchone()[0]
