@@ -3,3 +3,8 @@ Donginger is a chatbot persona originally created for the Everything2.com websit
 A few years ago, I moved it to the HellMOO RPG.
 
 This project grew organically, I added features requested by players without thinking in the long term, my code became a mess. So I decided to Rewrite It From Scratch(tm).
+
+Requirements:
+	* Python 2.6
+	* Python-Twitter (http://code.google.com/p/python-twitter/)
+	* lxml (http://lxml.de/)
