@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import json
 import telnetlib
 import sqlite3 as sqlite
 from xml.etree.ElementTree import ElementTree
@@ -8,22 +9,20 @@ from xml.etree.ElementTree import ElementTree
 CONFIG = 'donginger.xml'
 conf = {}
 
-def parseConf():
-	global conf
-	try:
-		tree = ElementTree()
-		tree.parse(CONFIG)
+class Dong(object):
+	pass
 
-		conf['main_db'] = tree.find('database').text
-		conf['username'] = tree.find('username').text
-		conf['password'] = tree.find('password').text
-		conf['host'] = tree.find('host').text
-		conf['first_command'] = tree.find('first_command').text
+def parseConf():
+	try:
+		dong.config = json.load(CONFIG)
 		
-		return conf
-	except:
-		print 'Error parsing configuration.'
+	except ValueError, e:
+		print 'Error parsing configuration:', e
 		sys.exit(1)
+		
+	for name, conf in dong.config['modules']:
+		dong.modules[name] = conf
+		dong.commands[conf['command']] = name
 		
 		
 class DB:
@@ -43,7 +42,7 @@ class TelnetConnector:
 	def connect(self):
 		self.tn = telnetlib.Telnet(conf['host'], 7777)
 		self.tn.read_until(" connected)")
-		self.tn.write("connect %s %s\n" % (conf['username'], conf['password']))
+		self.write("connect %s %s" % (conf['username'], conf['password']))
 		if conf['first_command']:
 			self.write(conf['first_command'])
 
@@ -59,11 +58,15 @@ class Processor:
 		self.con = con
 	
 	def parser(self):
-		self.processLine(self.con.read_until("\n"))
+		buf = self.con.read_until('\n')
+		self.line = buf.split(" ", 3)
+		
+	
 
 if __name__ == '__main__':
 	print "Starting up..."
 	
+	dong = Dong()
 	con = TelnetConnector()
 	db = DB()
 
