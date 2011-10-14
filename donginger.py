@@ -6,6 +6,8 @@ import json
 import telnetlib
 import sqlite3 as sqlite
 
+sys.path += ['plugins']
+
 CONFIG = 'donginger.conf'
 
 class Dong(object):
