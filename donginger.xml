@@ -1,0 +1,6 @@
+<Main>
+	<database>data.db</database>
+	<host>some.host.com</host>
+	<username>Donginger</username>
+	<password>PASSWORD</password>
+</Main>
