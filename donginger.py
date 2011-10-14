@@ -30,7 +30,7 @@ def parseConf():
 		dong.commands[i[1]['command']] = i[0]
 
 		# tee hee
-		plug_entry = getattr(__import__(i[1]['file']),i[1]['file'])
+		plug_entry = getattr(__import__(i[1]['file']),i[1]['class'])
 		dong.plugins[i[0]] = plug_entry(i[1])
 
 	
