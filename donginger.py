@@ -6,9 +6,6 @@ import json
 import telnetlib
 import sqlite3 as sqlite
 
-# Local imports
-from twit import Twit
-
 CONFIG = 'donginger.conf'
 
 class Dong(object):
@@ -17,6 +14,7 @@ class Dong(object):
 def parseConf():
 	dong.modules = {}
 	dong.commands = {}
+	dong.plugins = {}
 	
 	try:
 		dong.config = json.load(open(CONFIG, 'r'))
@@ -28,6 +26,7 @@ def parseConf():
 	for i in dong.config['modules'].items():
 		dong.modules[i[0]] = i[1]
 		dong.commands[i[1]['command']] = i[0]
+		__import__(i[1]['file'])
 
 	
 class DB:
