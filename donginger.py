@@ -28,7 +28,10 @@ def parseConf():
 	for i in dong.config['modules'].items():
 		dong.modules[i[0]] = i[1]
 		dong.commands[i[1]['command']] = i[0]
-		__import__(i[1]['file'])
+
+		# tee hee
+		plug_entry = getattr(__import__(i[1]['file']),i[1]['file'])
+		dong.plugins[i[0]] = plug_entry(i[1])
 
 	
 class DB:
