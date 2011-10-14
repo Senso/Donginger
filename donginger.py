@@ -15,7 +15,7 @@ class Dong(object):
 
 def parseConf():
 	try:
-		dong.config = json.load(CONFIG)
+		dong.config = json.load(open(CONFIG, 'r'))
 		
 	except ValueError, e:
 		print 'Error parsing configuration:', e
@@ -68,6 +68,7 @@ if __name__ == '__main__':
 	print "Starting up..."
 	
 	dong = Dong()
+	parseConf()
 	con = TelnetConnector()
 	db = DB()
 
