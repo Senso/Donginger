@@ -19,7 +19,7 @@ def parseConf():
 	dong.plugins = {}
 	
 	try:
-		dong.config = json.load(open(CONFIG, 'r'))
+		dong.config = json.load(open(CONFIG))
 		
 	except ValueError, e:
 		print 'Error parsing configuration:', e
@@ -27,11 +27,14 @@ def parseConf():
 		
 	for i in dong.config['modules'].items():
 		dong.modules[i[0]] = i[1]
-		dong.commands[i[1]['command']] = i[0]
+		
+		# Create a list of all the callbacks in that module
+		for call in i[1]['callbacks'].items():
+			dong.commands[call[0]] = [i[0], call[1]]
 
 		# tee hee
-		plug_entry = getattr(__import__(i[1]['file']),i[1]['class'])
-		dong.plugins[i[0]] = plug_entry(i[1])
+		plug_entry = getattr(__import__(i[1]['file']),i[1]['file'].capitalize())
+		dong.plugins[i[0]] = plug_entry(i[0], dong)
 
 	
 class DB:
@@ -75,10 +78,10 @@ class Processor:
 			cmd = line[2]
 			args = line[3]
 			if cmd in dong.commands.keys():
-				self.dispatch(cmd, args)
+				self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], args)
 				
-	def dispatch(self, cmd, args):
-		pass
+	def dispatch(self, plugin, callback, args):
+		dong.plugins[plugin](callback)(args)
 	
 
 if __name__ == '__main__':
@@ -87,7 +90,7 @@ if __name__ == '__main__':
 	dong = Dong()
 	parseConf()
 	con = TelnetConnector()
-	db = DB()
+	dong.db = DB()
 
 	while True:
 		try:
