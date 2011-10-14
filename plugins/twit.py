@@ -38,6 +38,9 @@ class Twit:
 	def randomTweet(self, msg):
 		self.dong.db.cu.execute("select * from hitlist order by random() limit 1")
 		target = self.dong.db.cu.fetchone()[0]
+		tags = self.getRandomTags()
+		if tags:
+			msg += ' ' + tags
 		self.postTweetTo(target, msg)
 
 	def postTweetTo(self, who, msg):
