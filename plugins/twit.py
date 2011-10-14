@@ -1,7 +1,9 @@
 import twitter
 
 class Twit:
-	def __init__(self, conf):
+	def __init__(self, name, dong):
+		self.dong = dong
+		conf = self.dong['modules'][name]
 		self.api = twitter.Api(consumer_key=conf['consumer_key'],consumer_secret=conf['consumer_secret'],access_token_key=conf['access_token_key'],access_token_secret=conf['access_token_secret'])
 		
 	def remove_unicode(self, str):
@@ -18,6 +20,11 @@ class Twit:
 				derp.append(i.screen_name)
 			return ', '.join(derp)
 		except: return ''
+		
+	def randomTweet(self, msg):
+		self.dong.db.cu.execute("select * from hitlist order by random() limit 1")
+		target = self.dong.db.cu.fetchone()[0]
+		self.postTweetTo(target, msg)
 
 	def postTweetTo(self, who, msg):
 		msg = self.remove_unicode(msg)
