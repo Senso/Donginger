@@ -1,7 +1,0 @@
-<Main>
-	<database>data.db</database>
-	<host>some.host.com</host>
-	<username>Donginger</username>
-	<password>PASSWORD</password>
-	<first_command>@join dionysus</first_command>
-</Main>
