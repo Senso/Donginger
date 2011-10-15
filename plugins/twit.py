@@ -27,19 +27,19 @@ class Twit:
 				if tag[0] == '#':
 					tag = tag[1:]
 				tag = tag.strip('\r')
-				self.dong.db.cu.execute("insert into twitags(name) values(?)", (tag.lower(),))
+				self.dong.db.cu.execute("insert into ?(name) values(?)", (dong.db_tables['tags'], tag.lower(),))
 			except: pass
 			
 	def delTag(self, tag):
 		try:
-			self.dong.db.cu.execute("delete from twitags where name = ?", (tag.lower(),))
+			self.dong.db.cu.execute("delete from ? where name = ?", (dong.db_tables['tags'], tag.lower(),))
 		except: pass
 		
 	def getRandomTags(self):
 		num = random.randrange(1,4)
 		tags = []
 		for i in range(1, num):
-			self.dong.db.cu.execute("select * from twitags order by random() limit 1")
+			self.dong.db.cu.execute("select * from ? order by random() limit 1", (dong.db_tables['tags'],))
 			tag = dba.cu.fetchone()
 			if tag[0] not in tags:
 				if tag[0][0] == '#':
@@ -50,7 +50,7 @@ class Twit:
 			return ' '.join(tags)
 		
 	def randomTweet(self, msg):
-		self.dong.db.cu.execute("select * from hitlist order by random() limit 1")
+		self.dong.db.cu.execute("select * from ? order by random() limit 1", (dong.db_tables['hitlist']))
 		target = self.dong.db.cu.fetchone()[0]
 		tags = self.getRandomTags()
 		if tags:
