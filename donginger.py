@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import os
+import re
 import sys
 import json
 import telnetlib
@@ -68,9 +69,14 @@ class TelnetConnector:
 class Processor:
 	def __init__(self, con):
 		self.con = con
+		self.ansi_pat = re.compile('\033\[[0-9;]+m')
+		
+	def stripANSI(self, str):
+		return self.ansipat.sub('', txt)
 	
 	def parser(self):
 		buf = self.con.read_until('\n')
+		buf = self.stripANSI(buf)
 		line = buf.split(" ", 3)
 		
 		# This makes sure Donginger does not catch what he says
