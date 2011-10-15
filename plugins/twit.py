@@ -27,8 +27,13 @@ class Twit:
 				if tag[0] == '#':
 					tag = tag[1:]
 				tag = tag.strip('\r')
-				self.dong.db.cu.execute("insert into twitags(name) values(?)", (tag,))
+				self.dong.db.cu.execute("insert into twitags(name) values(?)", (tag.lower(),))
 			except: pass
+			
+	def delTag(self, tag):
+		try:
+			self.dong.db.cu.execute("delete from twitags where name = ?", (tag.lower(),))
+		except: pass
 		
 	def getRandomTags(self):
 		num = random.randrange(1,4)
