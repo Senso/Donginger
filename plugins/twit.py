@@ -21,6 +21,15 @@ class Twit:
 			return ', '.join(derp)
 		except: return ''
 		
+	def addTag(self, tag):
+		if len(tag) > 2:
+			try: #unique constraint
+				if tag[0] == '#':
+					tag = tag[1:]
+				tag = tag.strip('\r')
+				self.dong.db.cu.execute("insert into twitags(name) values(?)", (tag,))
+			except: pass
+		
 	def getRandomTags(self):
 		num = random.randrange(1,4)
 		tags = []
