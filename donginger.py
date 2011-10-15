@@ -18,6 +18,7 @@ def parseConf():
 	dong.modules = {}
 	dong.commands = {}
 	dong.plugins = {}
+	dong.db_tables = {}
 	
 	try:
 		dong.config = json.load(open(CONFIG))
@@ -32,6 +33,10 @@ def parseConf():
 		# Create a list of all the callbacks in that module
 		for call in i[1]['callbacks'].items():
 			dong.commands[call[0]] = [i[0], call[1]]
+			
+		# Create a list of all needed SQL tables
+		for table in i[1]['db_tables'].items():
+			dong.db_tables[table[0]] = table[1]
 
 		# tee hee
 		plug_entry = getattr(__import__(i[1]['file']),i[1]['file'].capitalize())
@@ -44,8 +49,10 @@ class DB:
 			self.cx = sqlite.connect(dong.config['database'], isolation_level=None)
 			self.cu = self.cx.cursor()
 		else:
-			print "Database not found, quitting."
-			sys.exit(1)
+			self.cx = sqlite.connect(dong.config['database'], isolation_level=None)
+			self.cu = self.cx.cursor()
+			
+			
 
 
 class TelnetConnector:
