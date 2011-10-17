@@ -3,9 +3,14 @@ import twitter
 
 class Twit:
 	def __init__(self, name, dong):
+		self.name = name
 		self.dong = dong
-		conf = self.dong.plugins_conf[name]
-		self.api = twitter.Api(consumer_key=conf['consumer_key'],consumer_secret=conf['consumer_secret'],access_token_key=conf['access_token_key'],access_token_secret=conf['access_token_secret'])
+		self.conf = self.dong.plugins_conf[name]
+		self.api = twitter.Api(consumer_key=self.conf['consumer_key'],consumer_secret=self.conf['consumer_secret'],access_token_key=self.conf['access_token_key'],access_token_secret=self.conf['access_token_secret'])
+		
+	def init_db(self):
+		for table in self.conf['db_tables'].items():
+			db.create_table(table)
 		
 	def remove_unicode(self, str):
 		newstr = ''
