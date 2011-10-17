@@ -66,6 +66,7 @@ class TelnetConnector:
 		self.write("connect %s %s" % (dong.config['username'], dong.config['password']))
 		if dong.config['first_command']:
 			self.write(dong.config['first_command'])
+		print 'Connected.'
 
 	def write(self, str):
 		if self.tn:
@@ -85,6 +86,7 @@ class TelnetConnector:
 class Processor:
 	def __init__(self):
 		self.ansi_pat = re.compile('\033\[[0-9;]+m')
+		self.chat_pat = re.compile('(.+?) (says|asks|exclaims), \"(.+)\"')
 		
 	def stripANSI(self, str):
 		return self.ansi_pat.sub('', str)
@@ -92,10 +94,15 @@ class Processor:
 	def parser(self):
 		buf = con.read_until('\n')
 		buf = self.stripANSI(buf)
-		line = buf.split(" ", 3)
+		line = buf.split(' ', 4)
 		
 		# This makes sure Donginger does not catch what he says
 		if line[0] == dong.config['bot_objnum'] and line[1] != dong.config['bot_objnum']:
+			
+			# Network broadcasts
+			if line[3] in dong.config['monitored_nets']:
+				self.processNetwork(self, line)
+				
 			cmd = line[2]
 			args = line[3]
 			if cmd in dong.commands.keys():
@@ -103,6 +110,11 @@ class Processor:
 				
 	def dispatch(self, plugin, callback, args):
 		dong.plugins[plugin](callback)(args)
+		
+	def processNetwork(self, line):
+		ntalk = re.search(self.chat_pat, line[4])
+		author = ntalk.group(1)
+		text = ntalk.group(3)
 	
 
 if __name__ == '__main__':
@@ -112,6 +124,7 @@ if __name__ == '__main__':
 	parseConf()
 	dong.db = DB()
 	con = TelnetConnector()
+	con.connect()
 	proc = Processor()
 
 	while True:
