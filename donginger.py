@@ -5,8 +5,8 @@ import re
 import sys
 import json
 import time
+import glob
 import telnetlib
-import sqlite3 as sqlite
 
 sys.path += ['plugins']
 
@@ -16,11 +16,11 @@ class Dong(object):
 	pass
 
 def parse_conf():
-	dong.modules = {}
 	dong.commands = {}
 	dong.plugins = {}
-	dong.db_tables = {}
+	dong.plugins_conf = {}
 	
+	# Load main config file
 	try:
 		dong.config = json.load(open(CONFIG))
 		
@@ -28,33 +28,36 @@ def parse_conf():
 		print 'Error parsing configuration:', e
 		sys.exit(1)
 		
-	for i in dong.config['modules'].items():
-		dong.modules[i[0]] = i[1]
-		
-		# Create a list of all the callbacks in that module
-		for call in i[1]['callbacks'].items():
-			dong.commands[call[0]] = [i[0], call[1]]
-			
-		# Create a list of all needed SQL tables
-		for table in i[1]['db_tables'].items():
-			dong.db_tables[table[0]] = table[1]
-
-		# tee hee
-		plug_entry = getattr(__import__(i[1]['file']),i[1]['file'].capitalize())
-		dong.plugins[i[0]] = plug_entry(i[0], dong)
-
+	# Load individual plugins config
+	config_set = set(glob.glob(os.path.join("plugins", "*.conf")))
 	
-class DB:
-	def __init__(self):
-		if os.path.exists(dong.config['database']):
-			self.cx = sqlite.connect(dong.config['database'], isolation_level=None)
-			self.cu = self.cx.cursor()
-		else:
-			self.cx = sqlite.connect(dong.config['database'], isolation_level=None)
-			self.cu = self.cx.cursor()
-			
-			
+	for filename in config_set:
+		load_config(filename)
+		
+	for plugin in dong.plugins_conf:
+		plug_entry = getattr(__import__(plugin['file']),plugin['file'].capitalize())
+		dong.plugins[plugin['name']] = plug_entry(plugin, dong)
+	
+#	for i in dong.config['modules'].items():
+#		dong.modules[i[0]] = i[1]
+		
+#		# Create a list of all the callbacks in that module
+#		for call in i[1]['callbacks'].items():
+#			dong.commands[call[0]] = [i[0], call[1]]
 
+#		# tee hee
+#		plug_entry = getattr(__import__(i[1]['file']),i[1]['file'].capitalize())
+#		dong.plugins[i[0]] = plug_entry(i[0], dong)
+
+def load_config(file):
+	try:
+		config_json = json.load(open(file))
+		
+	except ValueError, e:
+		print 'Error parsing configuration:', e
+		sys.exit(1)
+		
+	dong.plugins_conf[config_json['name']] = config_json
 
 class TelnetConnector:
 	def __init__(self):
@@ -93,6 +96,7 @@ class Processor:
 	
 	def parser(self):
 		buf = con.read_until('\n')
+		buf = buf.strip('\r\n')
 		buf = self.strip_ansi(buf)
 		line = buf.split(' ', 4)
 		
@@ -119,8 +123,8 @@ class Processor:
 		text = ntalk.group(3)
 		
 		cmd = text.split()
-		if cmd in dong.commands.keys():
-			self.dispatch(dong.commands[cmd[0]][0], dong.commands[cmd[0]][1], cmd[1:])
+		if cmd[0] in dong.commands.keys():
+			self.dispatch(dong.commands[cmd[0]][0], dong.commands[cmd[0]][1], ' '.join(cmd[1:]))
 			
 	def process_talk(self, line):
 		cmd = line[3]
@@ -138,7 +142,6 @@ if __name__ == '__main__':
 	
 	dong = Dong()
 	parse_conf()
-	dong.db = DB()
 	con = TelnetConnector()
 	con.connect()
 	proc = Processor()
