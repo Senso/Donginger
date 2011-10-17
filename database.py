@@ -13,13 +13,12 @@ class Database:
 		self.base = None
 		self.metadata = None
 		
+		self.config = {}
 		self.parse_conf()
 		
-	def parse_conf():
-		db.config = {}
-		
+	def parse_conf(self):
 		try:
-			db.config = json.load(open(self.db_config))
+			self.config = json.load(open(self.db_config))
 			
 		except ValueError, e:
 			print "Error parsing configuration %s:" % self.db_config, e
@@ -51,7 +50,7 @@ class Database:
 			elif data == 'integer':
 				setattr(table_obj, col, Column(Integer))
 				
-		self.metadata.create_table(table_obj)
+		self.metadata.create_table(table_obj)	
 		
 
 
