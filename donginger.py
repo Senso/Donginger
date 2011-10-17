@@ -61,7 +61,7 @@ class TelnetConnector:
 	
 	def connect(self):
 		self.tn = telnetlib.Telnet(dong.config['host'], 7777)
-		self.tn.read_until(" connected)")
+		self.read_until(" connected)")
 		self.write("connect %s %s" % (dong.config['username'], dong.config['password']))
 		if dong.config['first_command']:
 			self.write(dong.config['first_command'])
@@ -71,6 +71,12 @@ class TelnetConnector:
 			self.tn.write(str + '\n')
 		else:
 			print 'No running telnet connection.'
+			
+	def read_until(self, str):
+		if self.tn:
+			return self.tn.read_until(str)
+		else:
+			print 'No running telnet connection.'		
 
 
 class Processor:
@@ -81,7 +87,7 @@ class Processor:
 		return self.ansipat.sub('', txt)
 	
 	def parser(self):
-		buf = con.tn.read_until('\n')
+		buf = con.read_until('\n')
 		buf = self.stripANSI(buf)
 		line = buf.split(" ", 3)
 		
