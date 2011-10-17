@@ -31,9 +31,7 @@ class Twit:
 			dong.db.insert('twitter_tags', {'name': tag})
 			
 	def del_tag(self, tag):
-		try:
-			self.dong.db.cu.execute("delete from ? where name = ?", (self.conf['db_tables']['twitter_tags'], tag.lower(),))
-		except: pass
+		dong.db.delete('twitter_tags', {'name': tag})
 		
 	def get_random_tags(self):
 		num = random.randrange(1,4)

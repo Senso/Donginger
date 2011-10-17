@@ -60,6 +60,9 @@ class Database:
 		ins = self.tables[table].insert()
 		ins.execute(data)
 		
+	def delete(self, table, where):
+		self.tables['table'].execute(delete().where(where))
+		
 		
 		
 		
