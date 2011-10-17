@@ -102,12 +102,7 @@ class Processor:
 			# Network broadcasts
 			if line[3] in dong.config['monitored_nets']:
 				self.process_network(self, line)
-				
-			cmd = line[2]
-			args = line[3]
-			if cmd in dong.commands.keys():
-				self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], args)
-				
+
 	def dispatch(self, plugin, callback, args):
 		dong.plugins[plugin](callback)(args)
 		
@@ -115,7 +110,11 @@ class Processor:
 		ntalk = re.search(self.chat_pat, line[4])
 		author = ntalk.group(1)
 		text = ntalk.group(3)
-	
+		
+		cmd = text.split()
+		if cmd in dong.commands.keys():
+			self.dispatch(dong.commands[cmd[0]][0], dong.commands[cmd[0]][1], cmd[1:])
+
 
 if __name__ == '__main__':
 	print "Starting up..."
