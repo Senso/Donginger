@@ -146,6 +146,7 @@ if __name__ == '__main__':
 	db = database.Database()
 	db.create_engine()
 	db.test_connection()
+	db.create_session()
 	
 	parse_conf()
 	
