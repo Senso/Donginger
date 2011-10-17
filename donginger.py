@@ -4,6 +4,7 @@ import os
 import re
 import sys
 import json
+import time
 import telnetlib
 import sqlite3 as sqlite
 
@@ -60,7 +61,7 @@ class TelnetConnector:
 		self.tn = None
 	
 	def connect(self):
-		self.tn = telnetlib.Telnet(dong.config['host'], 7777)
+		self.tn = telnetlib.Telnet(dong.config['host'], dong.config['port'])
 		self.read_until(" connected)")
 		self.write("connect %s %s" % (dong.config['username'], dong.config['password']))
 		if dong.config['first_command']:
@@ -71,12 +72,14 @@ class TelnetConnector:
 			self.tn.write(str + '\n')
 		else:
 			print 'No running telnet connection.'
+			sys.exit(1)
 			
 	def read_until(self, str):
 		if self.tn:
 			return self.tn.read_until(str)
 		else:
-			print 'No running telnet connection.'		
+			print 'No running telnet connection.'
+			sys.exit(1)
 
 
 class Processor:
@@ -84,7 +87,7 @@ class Processor:
 		self.ansi_pat = re.compile('\033\[[0-9;]+m')
 		
 	def stripANSI(self, str):
-		return self.ansipat.sub('', txt)
+		return self.ansi_pat.sub('', str)
 	
 	def parser(self):
 		buf = con.read_until('\n')
