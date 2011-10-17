@@ -1,9 +1,10 @@
 import twitter
 
+
 class Twit:
 	def __init__(self, name, dong):
 		self.dong = dong
-		conf = self.dong.modules[name]
+		conf = self.dong.plugins_conf[name]
 		self.api = twitter.Api(consumer_key=conf['consumer_key'],consumer_secret=conf['consumer_secret'],access_token_key=conf['access_token_key'],access_token_secret=conf['access_token_secret'])
 		
 	def remove_unicode(self, str):
@@ -72,3 +73,6 @@ class Twit:
 				status = self.api.PostUpdate(msg)
 			except Exception,e:
 				print "HTTP 500 error: %s" % e
+				
+				
+
