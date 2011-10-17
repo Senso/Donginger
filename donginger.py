@@ -102,6 +102,11 @@ class Processor:
 			# Network broadcasts
 			if line[3] in dong.config['monitored_nets']:
 				self.process_network(self, line)
+			
+			# Direct talk
+			elif line[3] in ('-donginger', '-dong'):
+				self.process_talk(self, line)
+			
 
 	def dispatch(self, plugin, callback, args):
 		dong.plugins[plugin](callback)(args)
@@ -114,6 +119,16 @@ class Processor:
 		cmd = text.split()
 		if cmd in dong.commands.keys():
 			self.dispatch(dong.commands[cmd[0]][0], dong.commands[cmd[0]][1], cmd[1:])
+			
+	def process_talk(self, line):
+		cmd = line[3]
+		if len(line) == 4:
+			args = line[4]
+		else:
+			args = None
+		
+		if cmd in dong.commands.keys():
+			self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], args)
 
 
 if __name__ == '__main__':
