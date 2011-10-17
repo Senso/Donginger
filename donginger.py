@@ -36,7 +36,7 @@ def parse_conf():
 		
 	for plugin in dong.plugins_conf:
 		plug_entry = getattr(__import__(plugin['file']),plugin['file'].capitalize())
-		dong.plugins[plugin['name']] = plug_entry(plugin, dong)
+		dong.plugins[plugin['plugin_name']] = plug_entry(plugin, dong)
 	
 #	for i in dong.config['modules'].items():
 #		dong.modules[i[0]] = i[1]
