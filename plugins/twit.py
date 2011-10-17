@@ -13,7 +13,7 @@ class Twit:
 			else: newstr += c
 		return newstr
 
-	def getFollowers(self):
+	def get_followers(self):
 		derp = []
 		try:
 			for i in self.api.GetFollowers():
@@ -21,7 +21,7 @@ class Twit:
 			return ', '.join(derp)
 		except: return ''
 		
-	def addTag(self, tag):
+	def add_tag(self, tag):
 		if len(tag) > 2:
 			try: #unique constraint
 				if tag[0] == '#':
@@ -30,12 +30,12 @@ class Twit:
 				self.dong.db.cu.execute("insert into ?(name) values(?)", (dong.db_tables['tags'], tag.lower(),))
 			except: pass
 			
-	def delTag(self, tag):
+	def del_tag(self, tag):
 		try:
 			self.dong.db.cu.execute("delete from ? where name = ?", (dong.db_tables['tags'], tag.lower(),))
 		except: pass
 		
-	def getRandomTags(self):
+	def get_random_tags(self):
 		num = random.randrange(1,4)
 		tags = []
 		for i in range(1, num):
@@ -49,15 +49,15 @@ class Twit:
 		if tags:
 			return ' '.join(tags)
 		
-	def randomTweet(self, msg):
+	def random_tweet(self, msg):
 		self.dong.db.cu.execute("select * from ? order by random() limit 1", (dong.db_tables['hitlist']))
 		target = self.dong.db.cu.fetchone()[0]
-		tags = self.getRandomTags()
+		tags = self.get_random_tags()
 		if tags:
 			msg += ' ' + tags
-		self.postTweetTo(target, msg)
+		self.post_tweet_to(target, msg)
 
-	def postTweetTo(self, who, msg):
+	def post_tweet_to(self, who, msg):
 		msg = self.remove_unicode(msg)
 		if msg:
 			try:
@@ -65,7 +65,7 @@ class Twit:
 			except Exception,e:
 				print "HTTP error: %s" % e
 
-	def postTweet(self, msg):
+	def post_tweet(self, msg):
 		msg = self.remove_unicode(msg)
 		if msg:
 			try:
