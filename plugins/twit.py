@@ -29,7 +29,7 @@ class Twit:
 				if tag[0] == '#':
 					tag = tag[1:]
 				tag = tag.strip('\r')
-				dong.db.insert(self.plugins_conf['db_tables']['twitter_tags'], ({'name': tag}))
+				dong.db.insert('twitter_tags', {'name': tag})
 			except: pass
 			
 	def del_tag(self, tag):
