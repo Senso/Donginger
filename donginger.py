@@ -74,15 +74,14 @@ class TelnetConnector:
 
 
 class Processor:
-	def __init__(self, con):
-		self.con = con
+	def __init__(self):
 		self.ansi_pat = re.compile('\033\[[0-9;]+m')
 		
 	def stripANSI(self, str):
 		return self.ansipat.sub('', txt)
 	
 	def parser(self):
-		buf = self.con.read_until('\n')
+		buf = con.tn.read_until('\n')
 		buf = self.stripANSI(buf)
 		line = buf.split(" ", 3)
 		
@@ -108,6 +107,6 @@ if __name__ == '__main__':
 
 	while True:
 		try:
-			proc.Parser()
+			proc.parser()
 			time.sleep(0.5)
 		except: raise
