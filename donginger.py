@@ -34,20 +34,13 @@ def parse_conf():
 	for filename in config_set:
 		load_config(filename)
 		
-	for plugin in dong.plugins_conf:
-		plug_entry = getattr(__import__(plugin['file']),plugin['file'].capitalize())
-		dong.plugins[plugin['plugin_name']] = plug_entry(plugin, dong)
-	
-#	for i in dong.config['modules'].items():
-#		dong.modules[i[0]] = i[1]
+	for plugin in dong.plugins_conf.items():
+		plug_entry = getattr(__import__(plugin[1]['file']),plugin[1]['file'].capitalize())
+		dong.plugins[plugin[1]['plugin_name']] = plug_entry(plugin[0], dong)
 		
-#		# Create a list of all the callbacks in that module
-#		for call in i[1]['callbacks'].items():
-#			dong.commands[call[0]] = [i[0], call[1]]
+		for call in plugin[1]['callbacks'].items():
+			dong.commands[call[0]] = [plugin[0], call[1]]
 
-#		# tee hee
-#		plug_entry = getattr(__import__(i[1]['file']),i[1]['file'].capitalize())
-#		dong.plugins[i[0]] = plug_entry(i[0], dong)
 
 def load_config(file):
 	try:
