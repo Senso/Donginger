@@ -57,7 +57,7 @@ def load_config(file):
 		print "Error parsing plugin configuration %s:" % file, e
 		sys.exit(1)
 		
-	dong.plugins_conf[config_json['name']] = config_json
+	dong.plugins_conf[config_json['plugin_name']] = config_json
 
 class TelnetConnector:
 	def __init__(self):
