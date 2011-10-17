@@ -8,6 +8,9 @@ import time
 import glob
 import telnetlib
 
+# Local imports
+import database
+
 sys.path += ['plugins']
 
 CONFIG = 'donginger.conf'
@@ -40,6 +43,9 @@ def parse_conf():
 		
 		for call in plugin[1]['callbacks'].items():
 			dong.commands[call[0]] = [plugin[0], call[1]]
+			
+		# Initialize the DB (create tables, etc.) for that plugin
+		dong.plugins[plugin[1]['plugin_name']].init_db()
 
 
 def load_config(file):
@@ -134,7 +140,13 @@ if __name__ == '__main__':
 	print "Starting up..."
 	
 	dong = Dong()
+		
+	db = database.Database()
+	db.create_engine()
+	db.test_connection()
+	
 	parse_conf()
+	
 	con = TelnetConnector()
 	con.connect()
 	proc = Processor()
