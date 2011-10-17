@@ -25,12 +25,10 @@ class Twit:
 		
 	def add_tag(self, tag):
 		if len(tag) > 2:
-			try: #unique constraint
-				if tag[0] == '#':
-					tag = tag[1:]
-				tag = tag.strip('\r')
-				dong.db.insert('twitter_tags', {'name': tag})
-			except: pass
+			if tag[0] == '#':
+				tag = tag[1:]
+			tag = tag.strip('\r')
+			dong.db.insert('twitter_tags', {'name': tag})
 			
 	def del_tag(self, tag):
 		try:
