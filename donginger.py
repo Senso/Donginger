@@ -109,7 +109,9 @@ class Processor:
 			
 
 	def dispatch(self, plugin, callback, args):
-		dong.plugins[plugin](callback)(args)
+		func = getattr(dong.plugins[plugin], callback, None)
+		if func:
+			func(args)
 		
 	def process_network(self, line):
 		ntalk = re.search(self.chat_pat, line[4])
@@ -122,7 +124,7 @@ class Processor:
 			
 	def process_talk(self, line):
 		cmd = line[3]
-		if len(line) == 4:
+		if len(line) == 5:
 			args = line[4]
 		else:
 			args = None
