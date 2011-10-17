@@ -46,8 +46,8 @@ def parse_conf():
 			
 		# Create the necessary tables for that plugin
 		for table in dong.plugins_conf[plugin[0]]['db_tables'].items():
-			db.create_table(table)
-		db.metadata.create_all(db.con)
+			dong.db.create_table(table)
+		dong.db.metadata.create_all(dong.db.con)
 
 
 def load_config(file):
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 	
 	parse_conf()
 	
-	db.plugins['twitter'].add_tag('foo')
+	dong.plugins['twitter'].add_tag('foo')
 	
 	con = TelnetConnector()
 	con.connect()
