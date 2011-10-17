@@ -44,8 +44,10 @@ def parse_conf():
 		for call in plugin[1]['callbacks'].items():
 			dong.commands[call[0]] = [plugin[0], call[1]]
 			
-		# Initialize the DB (create tables, etc.) for that plugin
-		dong.plugins[plugin[1]['plugin_name']].init_db()
+		# Create the necessary tables for that plugin
+		for table in dong.plugins_conf[plugin[0]]['db_tables'].items():
+			db.create_table(table)
+		db.metadata.create_all(db.con)
 
 
 def load_config(file):
