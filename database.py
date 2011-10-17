@@ -5,6 +5,7 @@ import json
 # SQLAlchemy imports
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Table, Column, Integer, String, MetaData
 
 class Database:
@@ -13,6 +14,7 @@ class Database:
 		self.con = None
 		self.base = None
 		self.metadata = None
+		self.session = None
 		
 		self.config = {}
 		self.parse_conf()
@@ -30,6 +32,10 @@ class Database:
 			self.con = create_engine("sqlite:///%s" % self.config['sqlite_file'])
 			self.metadata = MetaData()
 			self.metadata.bind = self.con
+			
+	def create_session(self):
+		Session = sessionmaker(bind=self.con)
+		self.session = Session()
 	
 	def test_connection(self):
 		if not self.con.execute("select 1").scalar():
