@@ -150,8 +150,6 @@ if __name__ == '__main__':
 	
 	parse_conf()
 	
-	dong.plugins['twitter'].add_tag('foo')
-	
 	con = TelnetConnector()
 	con.connect()
 	proc = Processor()
