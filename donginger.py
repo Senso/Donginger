@@ -101,11 +101,11 @@ class Processor:
 			
 			# Network broadcasts
 			if line[3] in dong.config['monitored_nets']:
-				self.process_network(self, line)
+				self.process_network(line)
 			
 			# Direct talk
-			elif line[3] in ('-donginger', '-dong'):
-				self.process_talk(self, line)
+			elif line[2] in ('-donginger', '-dong'):
+				self.process_talk(line)
 			
 
 	def dispatch(self, plugin, callback, args):
