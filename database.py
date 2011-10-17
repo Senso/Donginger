@@ -39,20 +39,17 @@ class Database:
 	def create_table(self, table_def):
 		"""Oh god, this is so ugly."""
 		
-		t_dict = {'__tablename__': table_def[0]}
+		table = table_def[1]
+		for i in table.items():
+			if i[1] == 'string':
+				table[i[0]] = String()
+			elif i[1] == 'integer':
+				table[i[0]] = Integer()
+			
+		table = Table(table_def[0], self.metadata, Column('id', Integer, primary_key=True),
+					  *(Column(col, ctype) for (col, ctype) in table.items()))
 		
-		t_dict['id'] = Column(Integer, primary_key=True)
-		for (col, data) in table_def[1].items():
-			if data == 'string':
-				t_dict[col] = Column(String)
-			elif data == 'integer':
-				t_dict[col] = Column(Integer)
-		
-		Base = declarative_base()
-		table_obj = type(str(table_def[0].capitalize()), (Base,), t_dict)
-				
-		self.metadata.create_table(table_obj)
-		
+
 
 
 	
