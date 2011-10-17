@@ -60,8 +60,10 @@ class Database:
 		ins = self.tables[table].insert()
 		ins.execute(data)
 		
-	def delete(self, table, where):
-		self.tables['table'].execute(delete().where(where))
+	def delete_by_name(self, table, where):
+		st = self.tables[table].delete(self.tables[table].c.name == where[1])
+		self.session.execute(st)
+		self.session.commit()
 		
 		
 		
