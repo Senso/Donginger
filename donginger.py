@@ -25,7 +25,7 @@ def parse_conf():
 		dong.config = json.load(open(CONFIG))
 		
 	except ValueError, e:
-		print 'Error parsing configuration:', e
+		print "Error parsing configuration %s: " % CONFIG, e
 		sys.exit(1)
 		
 	# Load individual plugins config
@@ -54,7 +54,7 @@ def load_config(file):
 		config_json = json.load(open(file))
 		
 	except ValueError, e:
-		print 'Error parsing configuration:', e
+		print "Error parsing plugin configuration %s:" % file, e
 		sys.exit(1)
 		
 	dong.plugins_conf[config_json['name']] = config_json
