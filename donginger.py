@@ -15,7 +15,7 @@ CONFIG = 'donginger.conf'
 class Dong(object):
 	pass
 
-def parseConf():
+def parse_conf():
 	dong.modules = {}
 	dong.commands = {}
 	dong.plugins = {}
@@ -88,12 +88,12 @@ class Processor:
 		self.ansi_pat = re.compile('\033\[[0-9;]+m')
 		self.chat_pat = re.compile('(.+?) (says|asks|exclaims), \"(.+)\"')
 		
-	def stripANSI(self, str):
+	def strip_ansi(self, str):
 		return self.ansi_pat.sub('', str)
 	
 	def parser(self):
 		buf = con.read_until('\n')
-		buf = self.stripANSI(buf)
+		buf = self.strip_ansi(buf)
 		line = buf.split(' ', 4)
 		
 		# This makes sure Donginger does not catch what he says
@@ -101,7 +101,7 @@ class Processor:
 			
 			# Network broadcasts
 			if line[3] in dong.config['monitored_nets']:
-				self.processNetwork(self, line)
+				self.process_network(self, line)
 				
 			cmd = line[2]
 			args = line[3]
@@ -111,7 +111,7 @@ class Processor:
 	def dispatch(self, plugin, callback, args):
 		dong.plugins[plugin](callback)(args)
 		
-	def processNetwork(self, line):
+	def process_network(self, line):
 		ntalk = re.search(self.chat_pat, line[4])
 		author = ntalk.group(1)
 		text = ntalk.group(3)
@@ -121,7 +121,7 @@ if __name__ == '__main__':
 	print "Starting up..."
 	
 	dong = Dong()
-	parseConf()
+	parse_conf()
 	dong.db = DB()
 	con = TelnetConnector()
 	con.connect()
