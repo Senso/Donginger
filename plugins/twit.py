@@ -8,10 +8,6 @@ class Twit:
 		self.conf = self.dong.plugins_conf[name]
 		self.api = twitter.Api(consumer_key=self.conf['consumer_key'],consumer_secret=self.conf['consumer_secret'],access_token_key=self.conf['access_token_key'],access_token_secret=self.conf['access_token_secret'])
 		
-	def init_db(self):
-		for table in self.conf['db_tables'].items():
-			db.create_table(table)
-		
 	def remove_unicode(self, str):
 		newstr = ''
 		for c in str:
@@ -33,19 +29,19 @@ class Twit:
 				if tag[0] == '#':
 					tag = tag[1:]
 				tag = tag.strip('\r')
-				self.dong.db.cu.execute("insert into ?(name) values(?)", (dong.db_tables['tags'], tag.lower(),))
+				dong.db.insert(self.conf['db_tables']['twitter_tags'], ({'name': tag}))
 			except: pass
 			
 	def del_tag(self, tag):
 		try:
-			self.dong.db.cu.execute("delete from ? where name = ?", (dong.db_tables['tags'], tag.lower(),))
+			self.dong.db.cu.execute("delete from ? where name = ?", (self.conf['db_tables']['twitter_tags'], tag.lower(),))
 		except: pass
 		
 	def get_random_tags(self):
 		num = random.randrange(1,4)
 		tags = []
 		for i in range(1, num):
-			self.dong.db.cu.execute("select * from ? order by random() limit 1", (dong.db_tables['tags'],))
+			self.dong.db.cu.execute("select * from ? order by random() limit 1", (self.conf['db_tables']['twitter_tags'],))
 			tag = dba.cu.fetchone()
 			if tag[0] not in tags:
 				if tag[0][0] == '#':
@@ -56,7 +52,7 @@ class Twit:
 			return ' '.join(tags)
 		
 	def random_tweet(self, msg):
-		self.dong.db.cu.execute("select * from ? order by random() limit 1", (dong.db_tables['hitlist']))
+		self.dong.db.cu.execute("select * from ? order by random() limit 1", (self.conf['db_tables']['twitter_hitlist']))
 		target = self.dong.db.cu.fetchone()[0]
 		tags = self.get_random_tags()
 		if tags:

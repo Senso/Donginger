@@ -16,6 +16,7 @@ class Database:
 		self.metadata = None
 		self.session = None
 		
+		self.tables = {}
 		self.config = {}
 		self.parse_conf()
 		
@@ -52,15 +53,13 @@ class Database:
 			elif i[1] == 'integer':
 				table[i[0]] = Integer()
 			
-		table = Table(table_def[0], self.metadata, Column('id', Integer, primary_key=True),
+		self.tables[table_def[0]] = Table(table_def[0], self.metadata, Column('id', Integer, primary_key=True),
 					  *(Column(col, ctype) for (col, ctype) in table.items()))
 		
-
-
-
-	
-	
-	
-	
-	
-	
+	def insert(self, table, data):
+		ins = self.tables[table].insert()
+		ins.execute(data)
+		
+		
+		
+		

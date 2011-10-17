@@ -143,12 +143,14 @@ if __name__ == '__main__':
 	
 	dong = Dong()
 		
-	db = database.Database()
-	db.create_engine()
-	db.test_connection()
-	db.create_session()
+	dong.db = database.Database()
+	dong.db.create_engine()
+	dong.db.test_connection()
+	dong.db.create_session()
 	
 	parse_conf()
+	
+	db.plugins['twitter'].add_tag('foo')
 	
 	con = TelnetConnector()
 	con.connect()
