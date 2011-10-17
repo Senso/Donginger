@@ -1,5 +1,6 @@
 
 import sys
+import json
 
 # SQLAlchemy imports
 from sqlalchemy import create_engine
@@ -25,9 +26,10 @@ class Database:
 			sys.exit(1)
 		
 	def create_engine(self):
-		if db.config['engine'] == 'sqlite':
-			self.con = create_engine("sqlite:///%s" % db.config['sqlite_file'])
-		self.metadata = Metadata()
+		if self.config['engine'] == 'sqlite':
+			self.con = create_engine("sqlite:///%s" % self.config['sqlite_file'])
+			self.metadata = MetaData()
+			self.metadata.bind = self.con
 	
 	def test_connection(self):
 		if not self.con.execute("select 1").scalar():
@@ -37,20 +39,19 @@ class Database:
 	def create_table(self, table_def):
 		"""Oh god, this is so ugly."""
 		
-		t_dict = {'__tablename__': table_def[0], '__table_args__':{'autoload':True}}
+		t_dict = {'__tablename__': table_def[0]}
 		
-		Base = declarative_base()
-		table_obj = type(table_def[0].capitalize(), (Base,), t_dict)
-		
-		table_obj.id = Column(Integer, primary_key=True)
-		
+		t_dict['id'] = Column(Integer, primary_key=True)
 		for (col, data) in table_def[1].items():
 			if data == 'string':
-				setattr(table_obj, col, Column(String))
+				t_dict[col] = Column(String)
 			elif data == 'integer':
-				setattr(table_obj, col, Column(Integer))
+				t_dict[col] = Column(Integer)
+		
+		Base = declarative_base()
+		table_obj = type(str(table_def[0].capitalize()), (Base,), t_dict)
 				
-		self.metadata.create_table(table_obj)	
+		self.metadata.create_table(table_obj)
 		
 
 
