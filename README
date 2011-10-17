@@ -8,3 +8,4 @@ Requirements:
 	* Python 2.6
 	* Python-Twitter (http://code.google.com/p/python-twitter/)
 	* lxml (http://lxml.de/)
+	* SQLAlchemy (http://www.sqlalchemy.org/)
