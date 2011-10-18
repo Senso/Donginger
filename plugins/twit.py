@@ -37,19 +37,19 @@ class Twit:
 		num = random.randrange(1,4)
 		tags = []
 		for i in range(1, num):
-			self.dong.db.cu.execute("select * from ? order by random() limit 1", (self.conf['db_tables']['twitter_tags'],))
-			tag = dba.cu.fetchone()
-			if tag[0] not in tags:
-				if tag[0][0] == '#':
-					tags.append(tag[0])
+			rand_tag = self.dong.db.get_random_row('twitter_tags')
+			print 'rand_tag', rand_tag
+
+			if rand_tag not in tags:
+				if rand_tag[0] == '#':
+					tags.append(rand_tag)
 				else:
-					tags.append('#' + tag[0])
+					tags.append('#' + rand_tag)
 		if tags:
 			return ' '.join(tags)
 		
 	def random_tweet(self, msg):
-		self.dong.db.cu.execute("select * from ? order by random() limit 1", (self.conf['db_tables']['twitter_hitlist']))
-		target = self.dong.db.cu.fetchone()[0]
+		target = self.dong.db.get_random_row('twitter_hitlist')
 		tags = self.get_random_tags()
 		if tags:
 			msg += ' ' + tags
