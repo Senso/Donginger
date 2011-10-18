@@ -1,5 +1,5 @@
 import twitter
-
+from random import randrange
 
 class Twit:
 	def __init__(self, name, dong):
