@@ -92,7 +92,12 @@ class TelnetConnector:
 class Processor:
 	def __init__(self):
 		self.ansi_pat = re.compile('\033\[[0-9;]+m')
-		self.chat_pat = re.compile('(.+?) (says|asks|exclaims), \"(.+)\"')
+		self.chat_pat = re.compile("\[(%s)\] (.+?) (says|asks|exclaims), \"(.+)\"" % '|'.join(dong.config['monitored_nets']))
+		
+		# Line format is specific to each game/server and this will have to be adapted.
+		# In the case of HellMOO, the format is as follow:
+		# bot_objnum caller_name (caller_objnum) verb_name argstr
+		self.line_pat = re.compile('(\#[0-9]+) (.+) \((\#[0-9]+)\) (.+) (.+)')
 		
 	def strip_ansi(self, str):
 		return self.ansi_pat.sub('', str)
@@ -101,45 +106,53 @@ class Processor:
 		buf = con.read_until('\n')
 		buf = buf.strip('\r\n')
 		buf = self.strip_ansi(buf)
-		line = buf.split(' ', 4)
 		
-		# This makes sure Donginger does not catch what he says
-		if line[0] == dong.config['bot_objnum'] and line[1] != dong.config['bot_objnum']:
-			
-			# Network broadcasts
-			if line[3] in dong.config['monitored_nets']:
-				self.process_network(line)
-			
-			# Direct talk
-			# TODO: This needs to be configurable
-			elif line[2] in ('-donginger', '-dong'):
-				self.process_talk(line)
-			
+		buf_match = re.search(self.line_pat, buf)
+		if buf_match:
+			caller_name = buf_match.group(2)
+			caller_obj  = buf_match.group(3)
+			verb        = buf_match.group(4)
+			line        = buf_match.group(5)
+		else:
+			return
+		
+		# Avoid parsing anything done by the bot to prevent loops.
+		if caller_name == dong.config['username']:
+			return
+		
+		# Direct talk or paging
+		if verb[0] in ('`', '-', '\'') and verb[1:].lower() in dong.config['aliases']:
+			self.process_line(caller_name, line)
+		
+		# net (channel) talk	
+		net_match = re.search(self.chat_pat, line)
+		if net_match:
+			self.process_line(caller_name, net_match.group(4), net_match.group(1))
 
-	def dispatch(self, plugin, callback, args):
+	def dispatch(self, plugin, callback, argstr):
 		func = getattr(dong.plugins[plugin], callback, None)
 		if func:
-			func(args)
-		
-	def process_network(self, line):
-		ntalk = re.search(self.chat_pat, line[4])
-		if ntalk:
-			author = ntalk.group(1)
-			text = ntalk.group(3)
-		
-			cmd = text.split()
-			if cmd[0] in dong.commands.keys():
-				self.dispatch(dong.commands[cmd[0]][0], dong.commands[cmd[0]][1], ' '.join(cmd[1:]))
+			return func(argstr)
 			
-	def process_talk(self, line):
-		cmd = line[3]
-		if len(line) == 5:
-			args = line[4]
-		else:
-			args = None
+	def process_line(self, caller, line, network=None):
+		cmd = self.match_command(line)
+		if cmd:
+			# This removes the command from the line of text itself, leaving on the rest
+			argstr = line[len(cmd):]
+			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][0][1], argstr)
+
+		if network:
+			# TODO: network chat archival here
+			pass
+			
+	def match_command(self, line):
+		commands = dong.commands.keys()
+		command = [cmd for cmd in commands if line.startswith(cmd)]
 		
-		if cmd in dong.commands.keys():
-			self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], args)
+		if len(command) == 1:
+			return command[0]
+
+		return None
 
 
 if __name__ == '__main__':
