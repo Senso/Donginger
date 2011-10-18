@@ -160,11 +160,11 @@ class Processor:
 			
 			if response:
 				# TODO: add proper response handling
-				if network:
+				if channel:
 					con.write('dong ' + response)
 				pass
 
-		if network:
+		if channel:
 			# TODO: network chat archival here
 			pass
 			
