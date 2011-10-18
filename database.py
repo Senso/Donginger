@@ -72,8 +72,9 @@ class Database:
 		self.session.commit()
 		
 	def get_random_row(self, table):
-		rand = randrange(0, self.session.query(table).count())
-		row = self.session.query(table)[rand]
+		count = self.session.query(self.tables[table]).count()
+		rand = randrange(0, count)
+		row = self.session.query(self.tables[table])[rand]
 		return row
 		
 		
