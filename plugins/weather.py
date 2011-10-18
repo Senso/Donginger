@@ -25,7 +25,7 @@ class Weather:
 		
 		xml = etree.fromstring(w.read())
 		
-		self.process_xml(xml)
+		return self.process_xml(xml)
 		
 	def process_xml(self, xml):
 		if xml is None:
