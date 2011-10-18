@@ -99,7 +99,7 @@ class Processor:
 		
 		# Line format is specific to each game/server and this will have to be adapted.
 		# In the case of HellMOO, the format is as follow:
-		# bot_objnum caller_name (caller_objnum) verb_name argstr
+		# bot_objnum caller_name (caller_objnum) verb argstr
 		self.line_pat = re.compile('(\#[0-9]+) (.+) \((\#[0-9]+)\) (.+?) (.+)')
 		
 	def strip_ansi(self, str):
@@ -125,9 +125,17 @@ class Processor:
 		if caller_name == dong.config['username']:
 			return
 		
-		# Direct talk or paging
-		if verb[0] in ('`', '-', '\'') and verb[1:].lower() in dong.config['aliases']:
-			self.process_line(caller_name, line)
+		# Direct talk or paging shortcut
+		elif verb[0] in ('`', '-', '\'') and verb[1:].lower() in dong.config['aliases']:
+			self.process_line(caller_name, line, caller_name)
+			
+		# Proper paging using the 'page' command
+		# Quite an ugly hack
+		elif verb == 'page':
+			prefix = [alias for alias in dong.config['aliases'] if line.startswith(alias)]
+			for p in prefix:
+				line = re.sub("^%s " % p, '', line)
+			self.process_line(caller_name, line, caller_name)
 		
 		# net (channel) talk	
 		net_match = re.search(self.chat_pat, line)
@@ -141,7 +149,7 @@ class Processor:
 		if func:
 			return func(argstr.strip())
 			
-	def process_line(self, caller, line, network=None):
+	def process_line(self, caller, line, channel=None):
 		"""Find if a command is triggered and do post-callback processing."""
 		
 		cmd = self.match_command(line)
