@@ -9,7 +9,7 @@ class Weather:
 		self.dong = dong
 		self.conf = self.dong.plugins_conf[name]
 		
-	def build_query(self, params):
+	def build_query(self, url, params):
 		post_data = urlencode(params)
 		request = urllib2.Request(url, post_data)
 		opener = urllib2.build_opener()
