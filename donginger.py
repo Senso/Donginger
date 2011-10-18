@@ -97,7 +97,7 @@ class Processor:
 		# Line format is specific to each game/server and this will have to be adapted.
 		# In the case of HellMOO, the format is as follow:
 		# bot_objnum caller_name (caller_objnum) verb_name argstr
-		self.line_pat = re.compile('(\#[0-9]+) (.+) \((\#[0-9]+)\) (.+) (.+)')
+		self.line_pat = re.compile('(\#[0-9]+) (.+) \((\#[0-9]+)\) (.+?) (.+)')
 		
 	def strip_ansi(self, str):
 		return self.ansi_pat.sub('', str)
@@ -139,7 +139,7 @@ class Processor:
 		if cmd:
 			# This removes the command from the line of text itself, leaving on the rest
 			argstr = line[len(cmd):]
-			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][0][1], argstr)
+			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], argstr)
 
 		if network:
 			# TODO: network chat archival here
