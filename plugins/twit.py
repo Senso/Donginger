@@ -33,6 +33,15 @@ class Twit:
 	def del_tag(self, tag):
 		dong.db.delete_by_name('twitter_tags', ('name', tag))
 		
+	def add_target(self, name):
+		if len(name) > 2:
+			if name[0] == '@':
+				name = name[1:]
+			self.dong.db.insert('twitter_hitlist', {'name': name})
+			
+	def del_target(self, name):
+		dong.db.delete_by_name('twitter_hitlist', ('name', name))
+		
 	def get_random_tags(self):
 		num = random.randrange(1,4)
 		tags = []
