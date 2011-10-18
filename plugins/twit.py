@@ -47,7 +47,7 @@ class Twit:
 		tags = []
 		for i in range(1, num):
 			rand_tag = self.dong.db.get_random_row('twitter_tags')
-			print 'rand_tag', rand_tag
+			rand_tag = rand_tag[1]
 
 			if rand_tag not in tags:
 				if rand_tag[0] == '#':
@@ -59,6 +59,7 @@ class Twit:
 		
 	def random_tweet(self, msg):
 		target = self.dong.db.get_random_row('twitter_hitlist')
+		target = target[1]
 		tags = self.get_random_tags()
 		if tags:
 			msg += ' ' + tags
