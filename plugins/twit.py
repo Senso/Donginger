@@ -29,11 +29,11 @@ class Twit:
 				tag = tag[1:]
 			tag = tag.strip('\r')
 			self.dong.db.insert('twitter_tags', {'name': tag})
-			return 'Tag added'
+			return 'Tag added.'
 			
 	def del_tag(self, tag):
 		self.dong.db.delete_by_name('twitter_tags', ('name', tag))
-		return 'Tag deleted'
+		return 'Tag deleted.'
 		
 	def add_target(self, name):
 		if len(name) > 2:
