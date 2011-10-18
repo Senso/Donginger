@@ -160,9 +160,10 @@ class Processor:
 			
 			if response:
 				# TODO: add proper response handling
-				if channel:
-					con.write('dong ' + response)
-				pass
+				if channel and channel in dong.config['monitored_nets']:
+					con.write("%s %s" % (channel[:-3], response))
+				else:
+					con.write("-%s %s" % (channel, response))
 
 		if channel:
 			# TODO: network chat archival here
