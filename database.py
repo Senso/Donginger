@@ -1,6 +1,7 @@
 
 import sys
 import json
+from random import randrange
 
 # SQLAlchemy imports
 from sqlalchemy import create_engine
@@ -70,6 +71,10 @@ class Database:
 		self.session.execute(st)
 		self.session.commit()
 		
+	def get_random_row(self, table):
+		rand = randrange(0, self.session.query(table).count())
+		row = self.session.query(table)[rand]
+		return row
 		
 		
 		
