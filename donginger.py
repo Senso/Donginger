@@ -142,12 +142,12 @@ class Processor:
 		if net_match:
 			self.process_line(caller_name, net_match.group(4), net_match.group(1))
 
-	def dispatch(self, plugin, callback, argstr):
+	def dispatch(self, plugin, callback, caller, argstr):
 		"""Call the actual method on the plugin."""
 		
 		func = getattr(dong.plugins[plugin], callback, None)
 		if func:
-			return func(argstr.strip())
+			return func(caller, argstr.strip())
 			
 	def process_line(self, caller, line, channel=None):
 		"""Find if a command is triggered and do post-callback processing."""
@@ -156,14 +156,14 @@ class Processor:
 		if cmd:
 			# This removes the command from the line of text itself, leaving on the rest
 			argstr = line[len(cmd):]
-			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], argstr)
+			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], caller, argstr)
 			
 			if response:
 				# TODO: add proper response handling
 				if channel and channel in dong.config['monitored_nets']:
 					con.write("%s %s" % (channel[:-3], response))
 				else:
-					con.write("-%s %s" % (channel, response))
+					con.write("-%s %s" % (caller, response))
 
 		if channel:
 			# TODO: network chat archival here
