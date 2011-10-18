@@ -40,6 +40,8 @@ def parse_conf():
 		load_config(filename)
 		
 def load_plugins():
+	"""Load an instance of each plugin class and create the DB tables if needed."""
+	
 	for plugin in dong.plugins_conf.items():
 		plug_entry = getattr(__import__(plugin[1]['file']),plugin[1]['file'].capitalize())
 		dong.plugins[plugin[1]['plugin_name']] = plug_entry(plugin[0], dong)
@@ -51,7 +53,6 @@ def load_plugins():
 		for table in dong.plugins_conf[plugin[0]]['db_tables'].items():
 			dong.db.create_table(table)
 		dong.db.metadata.create_all(dong.db.con)
-
 
 def load_config(file):
 	try:
@@ -90,6 +91,8 @@ class TelnetConnector:
 
 
 class Processor:
+	"""All the text parsing and command matching happens here."""
+	
 	def __init__(self):
 		self.ansi_pat = re.compile('\033\[[0-9;]+m')
 		self.chat_pat = re.compile("\[(%s)\] (.+?) (says|asks|exclaims), \"(.+)\"" % '|'.join(dong.config['monitored_nets']))
@@ -103,6 +106,8 @@ class Processor:
 		return self.ansi_pat.sub('', str)
 	
 	def parser(self):
+		"""Matches a single line, determine if someone is talking to the bot."""
+		
 		buf = con.read_until('\n')
 		buf = buf.strip('\r\n')
 		buf = self.strip_ansi(buf)
@@ -130,11 +135,15 @@ class Processor:
 			self.process_line(caller_name, net_match.group(4), net_match.group(1))
 
 	def dispatch(self, plugin, callback, argstr):
+		"""Call the actual method on the plugin."""
+		
 		func = getattr(dong.plugins[plugin], callback, None)
 		if func:
 			return func(argstr.strip())
 			
 	def process_line(self, caller, line, network=None):
+		"""Find if a command is triggered and do post-callback processing."""
+		
 		cmd = self.match_command(line)
 		if cmd:
 			# This removes the command from the line of text itself, leaving on the rest
