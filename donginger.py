@@ -132,7 +132,7 @@ class Processor:
 	def dispatch(self, plugin, callback, argstr):
 		func = getattr(dong.plugins[plugin], callback, None)
 		if func:
-			return func(argstr)
+			return func(argstr.strip())
 			
 	def process_line(self, caller, line, network=None):
 		cmd = self.match_command(line)
