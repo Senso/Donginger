@@ -19,6 +19,8 @@ class Dong(object):
 	pass
 
 def parse_conf():
+	"""Parses the main config file and all the plugins configs."""
+	
 	dong.commands = {}
 	dong.plugins = {}
 	dong.plugins_conf = {}
@@ -37,6 +39,7 @@ def parse_conf():
 	for filename in config_set:
 		load_config(filename)
 		
+def load_plugins():
 	for plugin in dong.plugins_conf.items():
 		plug_entry = getattr(__import__(plugin[1]['file']),plugin[1]['file'].capitalize())
 		dong.plugins[plugin[1]['plugin_name']] = plug_entry(plugin[0], dong)
@@ -109,6 +112,7 @@ class Processor:
 				self.process_network(line)
 			
 			# Direct talk
+			# TODO: This needs to be configurable
 			elif line[2] in ('-donginger', '-dong'):
 				self.process_talk(line)
 			
@@ -149,10 +153,13 @@ if __name__ == '__main__':
 	dong.db.create_session()
 	
 	parse_conf()
+	load_plugins()
 	
 	con = TelnetConnector()
 	con.connect()
 	proc = Processor()
+	
+	print 'Started.'
 
 	while True:
 		try:
