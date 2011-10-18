@@ -140,6 +140,10 @@ class Processor:
 			# This removes the command from the line of text itself, leaving on the rest
 			argstr = line[len(cmd):]
 			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], argstr)
+			
+			if response:
+				# TODO: add proper response handling
+				pass
 
 		if network:
 			# TODO: network chat archival here
