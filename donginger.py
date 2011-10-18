@@ -152,6 +152,8 @@ class Processor:
 			
 			if response:
 				# TODO: add proper response handling
+				if network:
+					con.write('dong ' + response)
 				pass
 
 		if network:
