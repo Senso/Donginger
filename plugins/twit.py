@@ -29,9 +29,11 @@ class Twit:
 				tag = tag[1:]
 			tag = tag.strip('\r')
 			self.dong.db.insert('twitter_tags', {'name': tag})
+			return 'Tag added'
 			
 	def del_tag(self, tag):
 		self.dong.db.delete_by_name('twitter_tags', ('name', tag))
+		return 'Tag deleted'
 		
 	def add_target(self, name):
 		if len(name) > 2:
@@ -63,13 +65,15 @@ class Twit:
 		tags = self.get_random_tags()
 		if tags:
 			msg += ' ' + tags
-		self.post_tweet_to(target, msg)
+		return self.post_tweet_to(target, msg)
 
 	def post_tweet_to(self, who, msg):
 		msg = self.remove_unicode(msg)
 		if msg:
 			try:
-				status = self.api.PostUpdate("@%s %s" % (who, msg))
+				str = "@%s %s" % (who, msg)
+				status = self.api.PostUpdate(str)
+				return str
 			except Exception,e:
 				print "HTTP error: %s" % e
 
