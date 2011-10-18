@@ -73,7 +73,6 @@ class TelnetConnector:
 		self.write("connect %s %s" % (dong.config['username'], dong.config['password']))
 		if dong.config['first_command']:
 			self.write(dong.config['first_command'])
-		print 'Connected.'
 
 	def write(self, str):
 		if self.tn:
@@ -124,12 +123,13 @@ class Processor:
 		
 	def process_network(self, line):
 		ntalk = re.search(self.chat_pat, line[4])
-		author = ntalk.group(1)
-		text = ntalk.group(3)
+		if ntalk:
+			author = ntalk.group(1)
+			text = ntalk.group(3)
 		
-		cmd = text.split()
-		if cmd[0] in dong.commands.keys():
-			self.dispatch(dong.commands[cmd[0]][0], dong.commands[cmd[0]][1], ' '.join(cmd[1:]))
+			cmd = text.split()
+			if cmd[0] in dong.commands.keys():
+				self.dispatch(dong.commands[cmd[0]][0], dong.commands[cmd[0]][1], ' '.join(cmd[1:]))
 			
 	def process_talk(self, line):
 		cmd = line[3]
