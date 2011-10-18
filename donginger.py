@@ -181,5 +181,5 @@ if __name__ == '__main__':
 	while True:
 		try:
 			proc.parser()
-			time.sleep(0.5)
+			time.sleep(0.3)
 		except: raise
