@@ -70,6 +70,8 @@ class Database:
 					type = String()
 
 				args.append(Column(col_name, type))
+				
+		self.tables[table_name] = Table(*args)
 
 	def insert(self, table, data):
 		ins = self.tables[table].insert()
