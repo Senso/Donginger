@@ -45,7 +45,7 @@ class Twit(Plugin):
 		dong.db.delete_by_name('twitter_hitlist', ('name', name))
 		
 	def get_random_tags(self):
-		num = random.randrange(1,4)
+		num = randrange(1,4)
 		tags = []
 		for i in range(1, num):
 			rand_tag = self.dong.db.get_random_row('twitter_tags')
