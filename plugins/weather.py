@@ -1,3 +1,5 @@
+
+from plugin import Plugin
 import urllib2
 from lxml import etree
 from urllib import urlencode
@@ -16,10 +18,18 @@ class Weather(Plugin):
 	def fetch_weather(self, who, loc):
 		
 		# Fetch cached location if not provided
+			
 		if not loc:
-			self.dong.db.session.query(self.dong.db.tables['weather']).where(('user', who))
+			query = self.dong.db.session.query(self.dong.db.tables['weather'])
+			loc = query.where(('user', who))
+			loc = loc[1]
 		else:
-			self.dong.db.insert('weather', {'user': who, 'location': loc})
+			query = self.dong.db.session.query(self.dong.db.tables['weather'])
+			loc = query.where(('user', who))
+			if loc:
+				self.dong.db.update('weather', {'user': who, 'location': loc})
+			else:
+				self.dong.db.insert('weather', {'user': who, 'location': loc})
 			
 		w = self.build_query('http://www.google.com/ig/api', {'weather': loc})
 		
