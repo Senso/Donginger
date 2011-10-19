@@ -1,5 +1,5 @@
 
-class Plugin:
+class Plugin(object):
 	def __init__(self, name, dong):
 		self.name = name
 		self.dong = dong
