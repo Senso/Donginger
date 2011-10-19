@@ -47,16 +47,30 @@ class Database:
 	def create_table(self, table_def):
 		"""Oh god, this is so ugly."""
 		
-		table = table_def[1]
-		for i in table.items():
-			if i[1] == 'string':
-				table[i[0]] = String()
-			elif i[1] == 'integer':
-				table[i[0]] = Integer()
-			
-		self.tables[table_def[0]] = Table(table_def[0], self.metadata, Column('id', Integer, primary_key=True),
-					  *(Column(col, ctype) for (col, ctype) in table.items()))
+		table_name = table_def[0]
+		table_data = table_def[1]
 		
+		args = [table_name, self.metadata]
+		
+		# First column is always 'id'
+		args.append(Column('id', Integer, primary_key=True))
+		
+		for col in table_data.items():
+			col_name = col[0]
+			type = col[1]
+			
+			if col_name == "constraints":
+				if type[1] == "unique":
+					args.append(UniqueConstraint(col_name))
+
+			else:
+				if type == 'integer':
+					type = Integer()
+				elif type == 'string':
+					type = String()
+
+				args.append(Column(col_name, type))
+
 	def insert(self, table, data):
 		ins = self.tables[table].insert()
 		ins.execute(data)
