@@ -1,11 +1,9 @@
 import twitter
 from random import randrange
 
-class Twit:
+class Twit(Plugin):
 	def __init__(self, name, dong):
-		self.name = name
-		self.dong = dong
-		self.conf = self.dong.plugins_conf[name]
+		super(Twit, self).__init__(name, dong)
 		self.api = twitter.Api(consumer_key=self.conf['consumer_key'],consumer_secret=self.conf['consumer_secret'],access_token_key=self.conf['access_token_key'],access_token_secret=self.conf['access_token_secret'])
 		
 	def remove_unicode(self, str):

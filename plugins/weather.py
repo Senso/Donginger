@@ -3,11 +3,9 @@ from lxml import etree
 from urllib import urlencode
 
 
-class Weather:
+class Weather(Plugin):
 	def __init__(self, name, dong):
-		self.name = name
-		self.dong = dong
-		self.conf = self.dong.plugins_conf[name]
+		super(Weather, self).__init__(name, dong)
 		
 	def build_query(self, url, params):
 		query_string = urlencode(params)
