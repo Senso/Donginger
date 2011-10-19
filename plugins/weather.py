@@ -17,16 +17,16 @@ class Weather(Plugin):
 		
 	def fetch_weather(self, who, loc):
 		
+		# Check if we already have that user in the DB
+		table = self.dong.db.tables['weather']
+		q = self.dong.db.session.query(table).filter(getattr(table.c, 'user') == who)
+		
 		# Fetch cached location if not provided
-			
 		if not loc:
-			query = self.dong.db.session.query(self.dong.db.tables['weather'])
-			loc = query.where(('user', who))
-			loc = loc[1]
+			loc = q.all()[0][1]
 		else:
-			query = self.dong.db.session.query(self.dong.db.tables['weather'])
-			loc = query.where(('user', who))
-			if loc:
+			db_loc = q.all()
+			if db_loc:
 				self.dong.db.update('weather', {'user': who, 'location': loc})
 			else:
 				self.dong.db.insert('weather', {'user': who, 'location': loc})
