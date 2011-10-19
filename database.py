@@ -9,6 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Table, Column, Integer, String, MetaData
 from sqlalchemy.schema import UniqueConstraint
+from sqlalchemy.sql import select
 
 class Database:
 	def __init__(self):
