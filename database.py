@@ -8,6 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Table, Column, Integer, String, MetaData
+from sqlalchemy.schema import UniqueConstraint
 
 class Database:
 	def __init__(self):
@@ -51,6 +52,7 @@ class Database:
 		table_data = table_def[1]
 		
 		args = [table_name, self.metadata]
+		constraints = []
 		
 		# First column is always 'id'
 		args.append(Column('id', Integer, primary_key=True))
@@ -60,8 +62,9 @@ class Database:
 			type = col[1]
 			
 			if col_name == "constraints":
-				if type[1] == "unique":
-					args.append(UniqueConstraint(col_name))
+				cons_col, cons_type = type.items()[0]
+				if cons_type == "unique":
+					constraints.append(UniqueConstraint(cons_col))
 
 			else:
 				if type == 'integer':
@@ -70,6 +73,10 @@ class Database:
 					type = String()
 
 				args.append(Column(col_name, type))
+				
+		# Constraints need to be defined after columns
+		if constraints:
+			args.append(*constraints)
 				
 		self.tables[table_name] = Table(*args)
 
