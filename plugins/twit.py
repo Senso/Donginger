@@ -23,7 +23,7 @@ class Twit(Plugin):
 			return ', '.join(derp)
 		except: return ''
 		
-	def add_tag(self, tag):
+	def add_tag(self, who, tag):
 		if len(tag) > 2:
 			if tag[0] == '#':
 				tag = tag[1:]
@@ -31,17 +31,17 @@ class Twit(Plugin):
 			self.dong.db.insert('twitter_tags', {'name': tag})
 			return 'Tag added.'
 			
-	def del_tag(self, tag):
+	def del_tag(self, who, tag):
 		self.dong.db.delete_by_name('twitter_tags', ('name', tag))
 		return 'Tag deleted.'
 		
-	def add_target(self, name):
+	def add_target(self, who, name):
 		if len(name) > 2:
 			if name[0] == '@':
 				name = name[1:]
 			self.dong.db.insert('twitter_hitlist', {'name': name})
 			
-	def del_target(self, name):
+	def del_target(self, who, name):
 		dong.db.delete_by_name('twitter_hitlist', ('name', name))
 		
 	def get_random_tags(self):
@@ -59,7 +59,7 @@ class Twit(Plugin):
 		if tags:
 			return ' '.join(tags)
 		
-	def random_tweet(self, msg):
+	def random_tweet(self, who, msg):
 		target = self.dong.db.get_random_row('twitter_hitlist')
 		target = target[1]
 		tags = self.get_random_tags()
@@ -77,7 +77,7 @@ class Twit(Plugin):
 			except Exception,e:
 				print "HTTP error: %s" % e
 
-	def post_tweet(self, msg):
+	def post_tweet(self, who, msg):
 		msg = self.remove_unicode(msg)
 		if msg:
 			try:
