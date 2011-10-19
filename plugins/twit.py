@@ -1,3 +1,5 @@
+
+from plugin import Plugin
 import twitter
 from random import randrange
 
