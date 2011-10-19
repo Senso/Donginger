@@ -23,7 +23,10 @@ class Weather(Plugin):
 		
 		# Fetch cached location if not provided
 		if not loc:
-			loc = q.all()[0][1]
+			try:
+				loc = q.all()[0][1]
+			except:
+				loc = ''
 		else:
 			db_loc = q.all()
 			if db_loc:
