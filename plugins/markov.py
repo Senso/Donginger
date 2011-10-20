@@ -51,13 +51,14 @@ class Markov(Plugin):
 
 		self.chains[chain].setdefault((item1, item2), []).append(self.END)
 		
-	def random_output(self, chain, max=20):
+	def random_output(self, chain, words=12):
 		output = []
 
 		# Randomize starting words
 		item1, item2 = random.choice(self.chains[chain].keys())
 
-		for i in range(max-2):
+		max = random.randrange(words / 2, words * 2)
+		for i in range(words):
 			item3 = random.choice(self.chains[chain][(item1, item2)])
 			if item3 is self.END:
 				break
