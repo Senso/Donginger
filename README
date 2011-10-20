@@ -3,9 +3,16 @@ Donginger is a chatbot persona originally created for the Everything2.com websit
 A few years ago, I moved it to the HellMOO RPG.
 
 This project grew organically, I added features requested by players without thinking in the long term, my code became a mess. So I decided to Rewrite It From Scratch(tm).
+My goal is to have it use an overly complex plugin system, to allow new features easily, without requiring modifications to the core code.
+
+Features:
+		* Can post to Twitter
+		* Queries the Google Suggest API
+		* Weather information based on location
+		* Multiple databases support (MySQL, SQLite, etc.) thanks to SQLAlchemy
 
 Requirements:
-	* Python 2.6
+	* Python 2.6+
 	* Python-Twitter (http://code.google.com/p/python-twitter/)
 	* lxml (http://lxml.de/)
 	* SQLAlchemy 0.7 (http://www.sqlalchemy.org/)
