@@ -19,10 +19,9 @@ class Suggest(Plugin):
 			return random_sug
 			
 	def remove_lyrics(self, sug):
-		nyt = []
 		for s in sug:
-			if s.find('lyrics') > -1: pass
-			else: nyt.append(s)
+			if s[0].find('lyrics') > -1: pass
+			else: nyt.append(s[0])
 		return nyt
 	
 	def store_suggestion(self, who, sug):
