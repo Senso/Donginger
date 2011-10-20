@@ -22,9 +22,14 @@ class Markov(Plugin):
 		self.chains = {}
 		self.process_all_texts()
 		
-	def markov_request(self, callback, who, arg):
-		if callback in self.chains.keys():
-			return self.random_output(arg)
+	def markov_request(self, line, who, arg):
+		for chain in self.chains.keys():
+			if line.find(chain) > -1:
+				blurb = self.random_output(chain)
+				joined = ' '.join(blurb)
+				if joined[-1:] not in ('.','!','?'):
+					joined += '.'
+				return joined
 
 	def add(self, chain, iterable):
 		"""	Since large texts can come in all sort of formats and be quite ugly to parse
