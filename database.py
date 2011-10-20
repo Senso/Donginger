@@ -102,15 +102,22 @@ class Database:
 		return row
 	
 	def update(self, table, where, value):
+		"""""update('tablename str', {'field': 'where_value'}, {'field', 'new_value'})"""
 		
 		# I should probably ditch SQLAlchemy
 		try:
 			table = self.tables[table]
-			where_field = getattr(table.c, where[0])
-			where_value = where[1]
+			where = where.items()
+			where_field = getattr(table.c, where.keys[0][0])
+			where_value = where[0][1]
 			value_field = getattr(table.c, value[0])
 			
-			table.update().where(where_field == where_value).values(value_field = value[1])
+			self.session.execute(
+						table.update().
+						where(where_field == where_value).
+						values(value)
+						)
+			self.session.commit()
 		except Exception, e:
 			print 'Failed UPDATE:', e
 		
