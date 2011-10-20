@@ -4,7 +4,7 @@ from plugin import Plugin
 
 class Suggest(Plugin):
 	def __init__(self, name, dong):
-		super(Twit, self).__init__(name, dong)
+		super(Suggest, self).__init__(name, dong)
 		
 	def google_suggest(self, who, str):
 		w = self.build_query('http://google.com/complete/search', {'q': str})
