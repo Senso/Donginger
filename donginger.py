@@ -53,7 +53,7 @@ def load_plugins():
 		try:
 			tbl_info = dong.plugins_conf[plugin[0]]['db_tables']
 		except:
-			return
+			continue
 		
 		# Create the necessary tables for that plugin
 		for table in tbl_info.items():
