@@ -11,7 +11,7 @@ class Suggest(Plugin):
 		w = self.build_query('http://google.com/complete/search', {'q': str})
 		page = w.read()
 		page_json = page.split('(', 1)[1][:-1]
-		suggestions = json.loads(page_json)[1][0]
+		suggestions = json.loads(page_json)[1]
 		if suggestions:
 			suggestions = self.remove_lyrics(suggestions)
 			random_sug = choice(suggestions)
@@ -35,9 +35,9 @@ class Suggest(Plugin):
 			# UNIQUE constraint will balk here
 			pass
 		
-	def pull_suggestion(self, *args):
+	def pull_suggestion(self, who, arg):
 		random_sug = self.dong.db.get_random_row('suggest')
-		res = self.google_suggest(random_sug)
+		res = self.google_suggest(who, random_sug[2])
 		return res
 
 	
