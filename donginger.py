@@ -161,7 +161,7 @@ class Processor:
 		
 		func = getattr(dong.plugins[plugin], callback, None)
 		if func:
-			return func(caller, argstr.strip())
+			return func(callback, caller, argstr.strip())
 			
 	def process_line(self, caller, line, channel=None):
 		"""Find if a command is triggered and do post-callback processing."""

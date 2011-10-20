@@ -6,7 +6,7 @@ class Weather(Plugin):
 	def __init__(self, name, dong):
 		super(Weather, self).__init__(name, dong)
 		
-	def fetch_weather(self, who, loc):
+	def fetch_weather(self, callback, who, loc):
 		"""<weather location> returns the weather for that location. Not providing a location makes it returns the weather of your last used location."""
 		
 		# Check if we already have that user in the DB

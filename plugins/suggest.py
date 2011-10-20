@@ -7,7 +7,7 @@ class Suggest(Plugin):
 	def __init__(self, name, dong):
 		super(Suggest, self).__init__(name, dong)
 		
-	def google_suggest(self, who, str):
+	def google_suggest(self, callback, who, str):
 		"""<suggest string> - returns a random Google Suggestion based on the string."""
 		
 		w = self.build_query('http://google.com/complete/search', {'q': str})

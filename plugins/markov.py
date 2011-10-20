@@ -22,8 +22,8 @@ class Markov(Plugin):
 		self.chains = {}
 		self.process_all_texts()
 		
-	def markov_request(self, who, arg):
-		if arg in self.chains.keys():
+	def markov_request(self, callback, who, arg):
+		if callback in self.chains.keys():
 			return self.random_output(arg)
 
 	def add(self, chain, iterable):
