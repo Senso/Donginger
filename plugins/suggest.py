@@ -8,6 +8,8 @@ class Suggest(Plugin):
 		super(Suggest, self).__init__(name, dong)
 		
 	def google_suggest(self, who, str):
+		"""<suggest string> - returns a random Google Suggestion based on the string."""
+		
 		w = self.build_query('http://google.com/complete/search', {'q': str})
 		page = w.read()
 		page_json = page.split('(', 1)[1][:-1]
@@ -36,6 +38,8 @@ class Suggest(Plugin):
 			pass
 		
 	def pull_suggestion(self, who, arg):
+		"""Nudging the bot makes it return a random Google suggestion."""
+		
 		random_sug = self.dong.db.get_random_row('suggest')
 		res = self.google_suggest(who, random_sug[2])
 		return res

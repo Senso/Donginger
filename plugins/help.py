@@ -6,6 +6,8 @@ class Help(Plugin):
 		super(Help, self).__init__(name, dong)
 		
 	def help(self, who, cmd):
+		"""The help command."""
+		
 		if cmd:
 			try:
 				plugin, cb = self.dong.commands[cmd]
