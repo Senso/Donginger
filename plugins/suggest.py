@@ -1,6 +1,7 @@
 
 import json
 from plugin import Plugin
+from random import choice
 
 class Suggest(Plugin):
 	def __init__(self, name, dong):
@@ -13,7 +14,7 @@ class Suggest(Plugin):
 		suggestions = json.loads(page_json)[1]
 		if suggestions:
 			suggestions = self.remove_lyrics(suggestions)
-			random_sug = random.choice(suggestions)
+			random_sug = choice(suggestions)
 			self.store_suggestion(who, inp)
 			return random_sug
 			
