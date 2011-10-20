@@ -2,7 +2,7 @@
 import json
 from plugin import Plugin
 
-class Twit(Plugin):
+class Suggest(Plugin):
 	def __init__(self, name, dong):
 		super(Twit, self).__init__(name, dong)
 		
