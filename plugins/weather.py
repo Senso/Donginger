@@ -22,7 +22,7 @@ class Weather(Plugin):
 		else:
 			db_loc = q.all()
 			if db_loc:
-				self.dong.db.update('weather', {'user', who}, {'location': loc})
+				self.dong.db.update('weather', {'user': who}, {'location': loc})
 			else:
 				self.dong.db.insert('weather', {'user': who, 'location': loc})
 			
