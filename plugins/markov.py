@@ -68,7 +68,7 @@ class Markov(Plugin):
 			now = time.time()
 			self.add_body(name, file)
 			then = time.time()
-			print "Processed %s (%s items) in %s seconds." % (name, len(self.chains[name]), str(int(then - now)))
+			print "Processed %s (%s items) in %s seconds." % (name, len(self.chains[name]), round((then - now), 3))
 
 	def add_body(self, name, file):
 		self.chains[name] = {}
