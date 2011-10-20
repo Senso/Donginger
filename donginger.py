@@ -13,7 +13,7 @@ import database
 
 sys.path += ['plugins']
 
-CONFIG = 'donginger.conf'
+CONFIG = 'conf/donginger.conf'
 
 class Dong(object):
 	pass
@@ -34,7 +34,7 @@ def parse_conf():
 		sys.exit(1)
 		
 	# Load individual plugins config
-	config_set = set(glob.glob(os.path.join("plugins", "*.conf")))
+	config_set = set(glob.glob(os.path.join("conf", "*.conf")))
 	
 	for filename in config_set:
 		load_config(filename)
