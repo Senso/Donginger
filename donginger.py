@@ -49,8 +49,14 @@ def load_plugins():
 		for call in plugin[1]['callbacks'].items():
 			dong.commands[call[0]] = [plugin[0], call[1]]
 			
+		# Catches plugins which don't need a DB
+		try:
+			tbl_info = dong.plugins_conf[plugin[0]]['db_tables']
+		except:
+			return
+		
 		# Create the necessary tables for that plugin
-		for table in dong.plugins_conf[plugin[0]]['db_tables'].items():
+		for table in tbl_info.items():
 			dong.db.create_table(table)
 		dong.db.metadata.create_all(dong.db.con)
 
@@ -62,7 +68,11 @@ def load_config(file):
 		print "Error parsing plugin configuration %s:" % file, e
 		sys.exit(1)
 		
-	dong.plugins_conf[config_json['plugin_name']] = config_json
+	try:
+		dong.plugins_conf[config_json['plugin_name']] = config_json
+	except:
+		# Not a plugin
+		pass
 
 class TelnetConnector:
 	def __init__(self):
