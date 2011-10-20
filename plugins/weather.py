@@ -9,12 +9,6 @@ class Weather(Plugin):
 	def __init__(self, name, dong):
 		super(Weather, self).__init__(name, dong)
 		
-	def build_query(self, url, params):
-		query_string = urlencode(params)
-		request = urllib2.Request(url + '?' + query_string)
-		opener = urllib2.build_opener()
-		return opener.open(request)
-		
 	def fetch_weather(self, who, loc):
 		
 		# Check if we already have that user in the DB
