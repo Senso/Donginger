@@ -25,7 +25,7 @@ class Suggest(Plugin):
 			else: nyt.append(s)
 		return nyt
 	
-	def store_suggestion(self, sug):
+	def store_suggestion(self, who, sug):
 		sug = sug.strip('\r')
 		sug = sug.strip()
 		
