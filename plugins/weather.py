@@ -22,7 +22,7 @@ class Weather(Plugin):
 		else:
 			db_loc = q.all()
 			if db_loc:
-				self.dong.db.update('weather', {'user': who, 'location': loc})
+				self.dong.db.update('weather', {'user', who}, {'location': loc})
 			else:
 				self.dong.db.insert('weather', {'user': who, 'location': loc})
 			
@@ -37,6 +37,9 @@ class Weather(Plugin):
 			return None
 		
 		xml = xml.find('weather')
+		
+		if xml.find('problem_cause') is not None:
+			return None
 		
 		info = dict((e.tag, e.get('data')) for e in xml.find('current_conditions'))
 		info['city'] = xml.find('forecast_information/city').get('data')
