@@ -47,7 +47,7 @@ class Markov(Plugin, collections.defaultdict):
 		return output
 	
 	def process_all_texts(self):
-		for name,file in self.texts.items:
+		for name,file in self.texts.items():
 			self.add_body(name, file)
 	
 	def add_body(self, name, file):
