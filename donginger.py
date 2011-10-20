@@ -161,7 +161,7 @@ class Processor:
 		
 		func = getattr(dong.plugins[plugin], callback, None)
 		if func:
-			return func(callback, caller, argstr.strip())
+			return func(line, caller, argstr.strip())
 			
 	def process_line(self, caller, line, channel=None):
 		"""Find if a command is triggered and do post-callback processing."""
@@ -170,7 +170,7 @@ class Processor:
 		if cmd:
 			# This removes the command from the line of text itself, leaving on the rest
 			argstr = line[len(cmd):]
-			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], caller, argstr)
+			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], line, caller, argstr)
 			
 			if response:
 				# TODO: add proper response handling
