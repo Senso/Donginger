@@ -37,7 +37,7 @@ class Suggest(Plugin):
 		
 	def pull_suggestion(self, *args):
 		random_sug = self.dong.db.get_random_row('suggest')
-		res = self.GoogleSuggest(random_sug)
+		res = self.google_suggest(random_sug)
 		return res
 
 	
