@@ -24,7 +24,7 @@ class Weather(Plugin):
 			if db_loc:
 				self.dong.db.update('weather', {'user': who, 'location': loc})
 			else:
-				self.dong.db.insert('weather', {'user': who, 'location': loc})
+				self.dong.db.session.insert('weather', {'user': who, 'location': loc})
 			
 		w = self.build_query('http://www.google.com/ig/api', {'weather': loc})
 		
