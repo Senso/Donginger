@@ -9,7 +9,7 @@ class Help(Plugin):
 		if cmd:
 			try:
 				plugin, cb = self.dong.commands[cmd]
-				func = getattr(dong.plugins[plugin], cb)
+				func = getattr(self.dong.plugins[plugin], cb)
 				doc = func.__doc__
 				if doc:
 					return "Help for %s: %s" % (cmd, doc)
