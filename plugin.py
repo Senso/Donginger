@@ -1,4 +1,7 @@
 
+import urllib2
+from urllib import urlencode
+
 class Plugin(object):
 	
 	def __init__(self, name, dong):

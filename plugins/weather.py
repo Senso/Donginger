@@ -1,8 +1,7 @@
 
 from plugin import Plugin
-import urllib2
 from lxml import etree
-from urllib import urlencode
+
 
 
 class Weather(Plugin):
