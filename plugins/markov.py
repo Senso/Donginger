@@ -18,9 +18,13 @@ class Markov(Plugin):
 		super(Markov, self).__init__(name, dong)
 
 		self.wordpat = re.compile('.*?([a-zA-Z0-9\'\-]+).*?')
-		self.texts = self.conf['texts']
+		self.texts = self.conf['texts'] 
 		self.chains = {}
 		self.process_all_texts()
+		
+	def markov_request(self, who, arg):
+		if arg in self.chains.keys:
+			return self.random_output(arg)
 
 	def add(self, chain, iterable):
 		"""	Since large texts can come in all sort of formats and be quite ugly to parse
