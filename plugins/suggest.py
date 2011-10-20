@@ -34,7 +34,7 @@ class Twit(Plugin):
 			# UNIQUE constraint will balk here
 			pass
 		
-	def pull_suggestion(self):
+	def pull_suggestion(self, *args):
 		random_sug = self.dong.db.get_random_row('suggest')
 		res = self.GoogleSuggest(random_sug)
 		return res
