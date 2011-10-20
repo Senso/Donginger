@@ -13,7 +13,7 @@ from sqlalchemy.sql import select
 
 class Database:
 	def __init__(self):
-		self.db_config = 'database.conf'
+		self.db_config = 'conf/database.conf'
 		self.con = None
 		self.base = None
 		self.metadata = None
