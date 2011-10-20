@@ -65,9 +65,9 @@ class Markov(Plugin):
 	
 	def process_all_texts(self):
 		for name,file in self.texts.items():
-			now = time.time()
+			now = time()
 			self.add_body(name, file)
-			then = time.time()
+			then = time()
 			print "Processed %s (%s items) in %s seconds." % (name, len(self.chains[name]), round((then - now), 3))
 
 	def add_body(self, name, file):
