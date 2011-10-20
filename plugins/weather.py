@@ -2,8 +2,6 @@
 from plugin import Plugin
 from lxml import etree
 
-
-
 class Weather(Plugin):
 	def __init__(self, name, dong):
 		super(Weather, self).__init__(name, dong)
