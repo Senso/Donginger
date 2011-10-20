@@ -11,7 +11,7 @@ class Suggest(Plugin):
 		w = self.build_query('http://google.com/complete/search', {'q': str})
 		page = w.read()
 		page_json = page.split('(', 1)[1][:-1]
-		suggestions = json.loads(page_json)[1]
+		suggestions = json.loads(page_json)[1][0]
 		if suggestions:
 			suggestions = self.remove_lyrics(suggestions)
 			random_sug = choice(suggestions)
@@ -21,7 +21,7 @@ class Suggest(Plugin):
 	def remove_lyrics(self, sug):
 		nyt = []
 		for s in sug:
-			if s[0].find('lyrics') > -1: pass
+			if s.find('lyrics') > -1: pass
 			else: nyt.append(s)
 		return nyt
 	
