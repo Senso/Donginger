@@ -15,7 +15,7 @@ class Suggest(Plugin):
 		if suggestions:
 			suggestions = self.remove_lyrics(suggestions)
 			random_sug = choice(suggestions)
-			self.store_suggestion(who, inp)
+			self.store_suggestion(who, str)
 			return random_sug
 			
 	def remove_lyrics(self, sug):
