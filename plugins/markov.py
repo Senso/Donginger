@@ -23,7 +23,7 @@ class Markov(Plugin):
 		self.process_all_texts()
 		
 	def markov_request(self, who, arg):
-		if arg in self.chains.keys:
+		if arg in self.chains.keys():
 			return self.random_output(arg)
 
 	def add(self, chain, iterable):
