@@ -89,17 +89,31 @@ class Database:
 		st = self.tables[table].delete(self.tables[table].c.id == where[1])
 		self.session.execute(st)
 		self.session.commit()
-		
+
 	def delete_by_name(self, table, where):
 		st = self.tables[table].delete(self.tables[table].c.name == where[1])
 		self.session.execute(st)
 		self.session.commit()
-		
+
 	def get_random_row(self, table):
 		count = self.session.query(self.tables[table]).count()
 		rand = randrange(0, count)
 		row = self.session.query(self.tables[table])[rand]
 		return row
+	
+	def update(self, table, where, value):
+		
+		# I should probably ditch SQLAlchemy
+		try:
+			table = self.tables[table]
+			where_field = getattr(table.c, where[0])
+			where_value = where[1]
+			value_field = getattr(table.c, value[0])
+			
+			table.update().where(where_field == where_value).values(value_field = value[1])
+		except Exception, e:
+			print 'Failed UPDATE:', e
+		
 		
 		
 		
