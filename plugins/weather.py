@@ -41,10 +41,13 @@ class Weather(Plugin):
 		if xml.find('problem_cause') is not None:
 			return None
 		
-		info = dict((e.tag, e.get('data')) for e in xml.find('current_conditions'))
-		info['city'] = xml.find('forecast_information/city').get('data')
-		info['high'] = xml.find('forecast_conditions/high').get('data')
-		info['low'] = xml.find('forecast_conditions/low').get('data')
+		try:
+			info = dict((e.tag, e.get('data')) for e in xml.find('current_conditions'))
+			info['city'] = xml.find('forecast_information/city').get('data')
+			info['high'] = xml.find('forecast_conditions/high').get('data')
+			info['low'] = xml.find('forecast_conditions/low').get('data')
+		except:
+			return None
 		
 		try:
 			return '%(city)s: %(condition)s, %(temp_f)sF/%(temp_c)sC (H:%(high)sF'\
