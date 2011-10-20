@@ -6,10 +6,10 @@ This project grew organically, I added features requested by players without thi
 My goal is to have it use an overly complex plugin system, to allow new features easily, without requiring modifications to the core code.
 
 Features:
-		* Can post to Twitter
-		* Queries the Google Suggest API
-		* Weather information based on location
-		* Multiple databases support (MySQL, SQLite, etc.) thanks to SQLAlchemy
+	* Can post to Twitter
+	* Queries the Google Suggest API
+	* Weather information based on location
+	* Multiple databases support (MySQL, SQLite, etc.) thanks to SQLAlchemy
 
 Requirements:
 	* Python 2.6+
