@@ -33,7 +33,7 @@ class Markov(Plugin):
 					joined += '.'
 				return joined
 
-	def add(self, chain, iterable):
+	def add(self, chain, iterable, tmp=False):
 		"""	Since large texts can come in all sort of formats and be quite ugly to parse
 			(ex. the Bible, with all its chapter numbers), I prefer using a pure "word"
 			regexp instead of doing .split().
@@ -41,27 +41,37 @@ class Markov(Plugin):
 		
 		item1 = item2 = self.START
 		
+		if tmp is True:
+			chain = {}
+		else:
+			chain = self.chains[chain]
+		
 		for item3 in iterable:
 			s = re.search(self.wordpat, item3)
 			if s:
 				item3 = s.group(1)
 
-				self.chains[chain].setdefault((item1, item2), []).append(item3)
+				chain.setdefault((item1, item2), []).append(item3)
 
 				item1 = item2
 				item2 = item3
 
-		self.chains[chain].setdefault((item1, item2), []).append(self.END)
+		chain.setdefault((item1, item2), []).append(self.END)
 		
-	def random_output(self, chain, words=12):
+		return chain
+		
+	def random_output(self, chain, words=12, tmp=False):
 		output = []
+		
+		if tmp is not True:
+			chain = self.chains[chain]
 
 		# Randomize starting words
-		item1, item2 = random.choice(self.chains[chain].keys())
+		item1, item2 = random.choice(chain.keys())
 
 		max = random.randrange(words / 2, words * 2)
 		for i in range(words):
-			item3 = random.choice(self.chains[chain][(item1, item2)])
+			item3 = random.choice(chain[(item1, item2)])
 			if item3 is self.END:
 				break
 
@@ -85,7 +95,16 @@ class Markov(Plugin):
 		self.add(name, words)
 		
 	def markov_chat(self, line, who, arg):
+		"""Returns a markov chain from one of the chat archives."""
+		
 		if arg in self.dong.config['archival']:
 			rows = self.dong.db.select_all(arg)
-			print rows
+			full_txt = []
+			for row in rows:
+				full_txt.append(row[1])
+			chain = self.add(' '.join(full_txt))
+			output = self.random_output(chain)
+			return output
+				
+			
 			
