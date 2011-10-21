@@ -1,7 +1,9 @@
 
-from plugin import Plugin
+import re
 import twitter
 from random import randrange
+
+from plugin import Plugin
 
 class Twit(Plugin):
 	def __init__(self, name, dong):
