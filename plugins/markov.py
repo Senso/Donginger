@@ -23,6 +23,8 @@ class Markov(Plugin):
 		self.process_all_texts()
 		
 	def markov_request(self, line, who, arg):
+		"""Depending on the command, returns a Markov Chain from a specific text."""
+		
 		for chain in self.chains.keys():
 			if line.find(chain) > -1:
 				blurb = self.random_output(chain)
@@ -52,8 +54,6 @@ class Markov(Plugin):
 		self.chains[chain].setdefault((item1, item2), []).append(self.END)
 		
 	def random_output(self, chain, words=12):
-		"""Depending on the command, returns a Markov Chain from a specific text."""
-		
 		output = []
 
 		# Randomize starting words
