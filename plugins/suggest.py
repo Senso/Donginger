@@ -25,7 +25,7 @@ class Suggest(Plugin):
 		for s in sug:
 			if s[0].find('lyrics') > -1: pass
 			else: filtered_list.append(s[0])
-		return nyt
+		return filtered_list
 	
 	def store_suggestion(self, who, sug):
 		sug = sug.strip('\r')
