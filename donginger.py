@@ -187,10 +187,9 @@ class Processor:
 			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], line, caller, argstr)
 			
 			if response:
-				# TODO: add proper response handling
-				if channel and channel in dong.config['monitored_nets']:
+				if channel == 'dongnet':
 					con.write("%s %s" % (channel[:-3], response))
-				else:
+				elif channel is None:
 					con.write("-%s %s" % (caller, response))
 
 		if channel and channel in dong.config['archival']:
