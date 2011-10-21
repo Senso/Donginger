@@ -9,7 +9,7 @@ Features:
 	* Can post to Twitter.
 	* Queries the Google Suggest API.
 	* Weather information based on location.
-	* Random markov chains from multiple bodies of text.
+	* Random markov chains from multiple bodies of text (none provided).
 	* Multiple databases support (MySQL, SQLite, etc.) thanks to SQLAlchemy (not all tested yet).
 
 Requirements:
@@ -27,5 +27,6 @@ Installation:
 	* Install Python and needed modules (see above).
 	* Edit conf/donginger.conf to make it point to your favorite server.
 	* Edit conf/database.conf - currently I have only tested it with SQLite.
+	* Edit the 'texts' block in conf/markov.conf, linking to your own text files.
 	* Run it: <python donginger.py>
 	* If you get errors, open a ticket and let me know what it is.
