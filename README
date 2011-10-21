@@ -16,3 +16,7 @@ Requirements:
 	* Python-Twitter (http://code.google.com/p/python-twitter/)
 	* lxml (http://lxml.de/)
 	* SQLAlchemy 0.7 (http://www.sqlalchemy.org/)
+	
+Credits:
+	* All original code by me (sensoz@gmail.com).
+	* Some plugins were copy/pasted and adapted from the excellent Skybot (https://github.com/rmmh/skybot/)
