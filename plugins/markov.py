@@ -2,6 +2,7 @@
 import re
 import random
 from time import time
+from heapq import merge
 
 from plugin import Plugin
 
@@ -101,10 +102,11 @@ class Markov(Plugin):
 			rows = self.dong.db.select_all(arg)
 			full_txt = []
 			for row in rows:
-				full_txt.append(row[1])
-			chain = self.add(' '.join(full_txt))
-			output = self.random_output(chain)
-			return output
+				full_txt.append(row[1].split(' '))
+
+			chain = self.add(None, list(merge(*full_txt)), True)
+			output = self.random_output(chain, tmp=True)
+			return ' '.join(output)
 				
 			
 			
