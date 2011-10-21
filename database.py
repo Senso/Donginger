@@ -7,7 +7,7 @@ from random import randrange
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Table, Column, Integer, String, MetaData
+from sqlalchemy import Table, Column, Integer, DateTime, String, MetaData
 from sqlalchemy.schema import UniqueConstraint
 from sqlalchemy.sql import select
 from sqlalchemy.exc import IntegrityError
@@ -73,6 +73,8 @@ class Database:
 					type = Integer()
 				elif type == 'string':
 					type = String()
+				elif type == 'datetime':
+					type = DateTime()
 
 				args.append(Column(col_name, type))
 				
