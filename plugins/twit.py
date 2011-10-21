@@ -23,7 +23,7 @@ class Twit(Plugin):
 			return ', '.join(derp)
 		except: return ''
 		
-	def add_tag(self, who, tag):
+	def add_tag(self, callback, who, tag):
 		"""Add a tag to the list used by <random tweet>."""
 		
 		if len(tag) > 2:
@@ -33,13 +33,13 @@ class Twit(Plugin):
 			self.dong.db.insert('twitter_tags', {'name': tag})
 			return 'Tag added.'
 			
-	def del_tag(self, who, tag):
+	def del_tag(self, callback, who, tag):
 		"""Deletes a tag from the list used by <random tweet>."""
 		
 		self.dong.db.delete_by_name('twitter_tags', ('name', tag))
 		return 'Tag deleted.'
 		
-	def add_target(self, who, name):
+	def add_target(self, callback, who, name):
 		"""Add a twitter account to the Shitlist."""
 		
 		if len(name) > 2:
@@ -47,7 +47,7 @@ class Twit(Plugin):
 				name = name[1:]
 			self.dong.db.insert('twitter_hitlist', {'name': name})
 			
-	def del_target(self, who, name):
+	def del_target(self, callback, who, name):
 		"""Removes a twitter account from the Shitlist."""
 		
 		dong.db.delete_by_name('twitter_hitlist', ('name', name))
@@ -67,7 +67,7 @@ class Twit(Plugin):
 		if tags:
 			return ' '.join(tags)
 		
-	def random_tweet(self, who, msg):
+	def random_tweet(self, callback, who, msg):
 		"""Posts a tweet to a random members of the Shitlist and appends random tags."""
 		
 		target = self.dong.db.get_random_row('twitter_hitlist')
@@ -87,7 +87,7 @@ class Twit(Plugin):
 			except Exception,e:
 				print "HTTP error: %s" % e
 
-	def post_tweet(self, who, msg):
+	def post_tweet(self, callback, who, msg):
 		"""Posts a raw tweet."""
 		
 		msg = self.remove_unicode(msg)

@@ -5,7 +5,7 @@ class Help(Plugin):
 	def __init__(self, name, dong):
 		super(Help, self).__init__(name, dong)
 		
-	def help(self, who, cmd):
+	def help(self, callback, who, cmd):
 		"""The help command."""
 		
 		if cmd:
