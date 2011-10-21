@@ -112,7 +112,7 @@ class Database:
 		try:
 			table = self.tables[table]
 			where = where.items()
-			where_field = getattr(table.c, where.keys[0][0])
+			where_field = getattr(table.c, where[0][0])
 			where_value = where[0][1]
 			value_field = getattr(table.c, value[0])
 			
