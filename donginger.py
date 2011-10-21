@@ -93,7 +93,8 @@ class TelnetConnector:
 		self.read_until(" connected)")
 		self.write("connect %s %s" % (dong.config['username'], dong.config['password']))
 		if dong.config['first_command']:
-			self.write(dong.config['first_command'])
+			for cmd in dong.config['first_command']:
+				self.write(cmd)
 
 	def write(self, str):
 		if self.tn:
