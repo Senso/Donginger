@@ -1,6 +1,7 @@
 
 import json
 import urllib2
+from lxml import etree
 from urllib import urlencode
 
 class Plugin(object):
@@ -21,3 +22,7 @@ class Plugin(object):
 		
 	def get_json(self, url, params=None):
 		return json.loads(self.build_query(url, params).read())
+		
+	def get_xml(self, url, params=None):
+		return (etree.fromstring(self.build_query(url, params).read()))
+		
