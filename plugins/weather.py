@@ -43,14 +43,13 @@ class Weather(Plugin):
 			info['city'] = xml.find('forecast_information/city').get('data')
 			info['high'] = xml.find('forecast_conditions/high').get('data')
 			info['low'] = xml.find('forecast_conditions/low').get('data')
+			
+			output = '%(city)s: %(condition)s, %(temp_f)sF/%(temp_c)sC (H:%(high)sF'\
+					', L:%(low)sF), %(humidity)s, %(wind_condition)s.' % info
 		except:
 			return None
 		
-		try:
-			return '%(city)s: %(condition)s, %(temp_f)sF/%(temp_c)sC (H:%(high)sF'\
-					', L:%(low)sF), %(humidity)s, %(wind_condition)s.' % info
-		except:
-			pass
+		return output
 		
 		
 		
