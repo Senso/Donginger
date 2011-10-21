@@ -1,4 +1,6 @@
 
+# Taken from skybot (https://github.com/rmmh/skybot/)
+
 from plugin import Plugin
 from lxml import etree
 
