@@ -76,6 +76,14 @@ class Twit(Plugin):
 		if tags:
 			msg += ' ' + tags
 		return self.post_tweet_to(target, msg)
+		
+	def riot_tweet(self, callback, who, msg):
+		"""Tweets the ouput of @riotkrrn"""
+		
+		riot = re.search('random tweet (.+)', callback)
+		if riot:
+			who,msg = self.sendRandomTweet(riot.group(1))
+			self.tn.write("say Sent to %s\n" % who)
 
 	def post_tweet_to(self, who, msg):
 		msg = self.remove_unicode(msg)
