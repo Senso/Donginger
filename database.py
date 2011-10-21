@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Table, Column, Integer, String, MetaData
 from sqlalchemy.schema import UniqueConstraint
 from sqlalchemy.sql import select
+from sqlalchemy.exc import IntegrityError
 
 class Database:
 	def __init__(self):
@@ -83,7 +84,10 @@ class Database:
 
 	def insert(self, table, data):
 		ins = self.tables[table].insert()
-		ins.execute(data)
+		try:
+			ins.execute(data)
+		except IntegrityError:
+			print "IntegrityError on %s: %s" % (table, data)
 
 	def delete(self, table, where):
 		st = self.tables[table].delete(self.tables[table].c.id == where[1])
