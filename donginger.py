@@ -92,8 +92,8 @@ class TelnetConnector:
 		self.tn = telnetlib.Telnet(dong.config['host'], dong.config['port'])
 		self.read_until(" connected)")
 		self.write("connect %s %s" % (dong.config['username'], dong.config['password']))
-		if dong.config['first_command']:
-			for cmd in dong.config['first_command']:
+		if dong.config['first_commands']:
+			for cmd in dong.config['first_commands']:
 				self.write(cmd)
 
 	def write(self, str):
