@@ -188,9 +188,8 @@ class Processor:
 				else:
 					con.write("-%s %s" % (caller, response))
 
-		if channel:
-			# TODO: network chat archival here
-			pass
+		if channel and channel in dong.config['archival']:
+			dong.db.insert(channel, {'time': 'NOW()', 'author': caller, 'message': line})
 			
 	def match_command(self, line):
 		commands = dong.commands.keys()
