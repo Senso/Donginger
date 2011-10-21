@@ -18,7 +18,7 @@ class Weather(Plugin):
 			try:
 				loc = q.all()[0][1]
 			except:
-				loc = ''
+				return self.__doc__
 		else:
 			db_loc = q.all()
 			if db_loc:
