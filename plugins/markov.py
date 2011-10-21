@@ -83,3 +83,9 @@ class Markov(Plugin):
 		full = open(file).read()
 		words = full.split(' ')
 		self.add(name, words)
+		
+	def markov_chat(self, line, who, arg):
+		if arg in self.dong.config['archival']:
+			rows = self.dong.db.select_all(arg)
+			print rows
+			
