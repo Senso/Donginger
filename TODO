@@ -1,0 +1,5 @@
+
+TODO
+
+* Make the Markov module optionally use a DB
+* Add admin users and on-the-fly config reload command
