@@ -71,10 +71,7 @@ class Markov(Plugin):
 	
 	def process_all_texts(self):
 		for name,file in self.texts.items():
-<<<<<<< HEAD
-=======
 			now = time()
->>>>>>> bc10e9bec04c4ed448d3cc369a2db9d88e773f7c
 			self.add_body(name, file)
 			then = time()
 			print "Processed %s (%s items) in %s seconds." % (name, len(self.chains[name]), round((then - now), 3))
