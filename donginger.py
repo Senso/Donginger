@@ -32,10 +32,19 @@ def parse_conf():
 	except ValueError, e:
 		print "Error parsing configuration %s: " % CONFIG, e
 		sys.exit(1)
-		
+	
+	# Create the tables needed for chat archival
+	if dong.config['archival']:
+		for net in dong.config['archival']:
+			table_schema = [net, {"time": "datetime",
+									"author": "string",
+									"message": "string"
+								}
+							]
+			dong.db.create_table(table_schema)
+	
 	# Load individual plugins config
 	config_set = set(glob.glob(os.path.join("conf", "*.conf")))
-	
 	for filename in config_set:
 		load_config(filename)
 		
