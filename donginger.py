@@ -7,6 +7,7 @@ import json
 import time
 import glob
 import telnetlib
+from datetime import datetime
 
 # Local imports
 import database
@@ -172,6 +173,9 @@ class Processor:
 		if func:
 			return func(line, caller, argstr.strip())
 			
+	def archive_line(self, channel, data):
+		dong.db.insert(channel, {'time': datetime.now(), 'author': caller, 'message': line})
+			
 	def process_line(self, caller, line, channel=None):
 		"""Find if a command is triggered and do post-callback processing."""
 		
@@ -189,7 +193,7 @@ class Processor:
 					con.write("-%s %s" % (caller, response))
 
 		if channel and channel in dong.config['archival']:
-			dong.db.insert(channel, {'time': 'NOW()', 'author': caller, 'message': line})
+			self.archive_line()
 			
 	def match_command(self, line):
 		commands = dong.commands.keys()
