@@ -173,7 +173,7 @@ class Processor:
 		if func:
 			return func(line, caller, argstr.strip())
 			
-	def archive_line(self, channel, data):
+	def archive_line(self, channel, caller, line):
 		dong.db.insert(channel, {'time': datetime.now(), 'author': caller, 'message': line})
 			
 	def process_line(self, caller, line, channel=None):
@@ -193,7 +193,7 @@ class Processor:
 					con.write("-%s %s" % (caller, response))
 
 		if channel and channel in dong.config['archival']:
-			self.archive_line(channel, line)
+			self.archive_line(channel, caller, line)
 			
 	def match_command(self, line):
 		commands = dong.commands.keys()
