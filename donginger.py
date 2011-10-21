@@ -156,7 +156,7 @@ class Processor:
 		if net_match:
 			self.process_line(caller_name, net_match.group(4), net_match.group(1))
 
-	def dispatch(self, plugin, callback, caller, argstr):
+	def dispatch(self, plugin, callback, line, caller, argstr):
 		"""Call the actual method on the plugin."""
 		
 		func = getattr(dong.plugins[plugin], callback, None)
