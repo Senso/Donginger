@@ -46,11 +46,13 @@ class Twit(Plugin):
 			if name[0] == '@':
 				name = name[1:]
 			self.dong.db.insert('twitter_hitlist', {'name': name})
+			return 'Target added to Shitlist.'
 			
 	def del_target(self, callback, who, name):
 		"""Removes a twitter account from the Shitlist."""
 		
 		dong.db.delete_by_name('twitter_hitlist', ('name', name))
+		return 'Target removed from Shitlist.'
 		
 	def get_random_tags(self):
 		num = randrange(1,4)
@@ -83,7 +85,7 @@ class Twit(Plugin):
 		riot = re.search('random tweet (.+)', callback)
 		if riot:
 			who,msg = self.sendRandomTweet(riot.group(1))
-			self.tn.write("say Sent to %s\n" % who)
+			self.tn.write("Sent to %s\n" % who)
 
 	def post_tweet_to(self, who, msg):
 		msg = self.remove_unicode(msg)
