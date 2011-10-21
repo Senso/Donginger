@@ -25,11 +25,8 @@ class Weather(Plugin):
 				self.dong.db.update('weather', {'user': who}, {'location': loc})
 			else:
 				self.dong.db.insert('weather', {'user': who, 'location': loc})
-			
-		w = self.build_query('http://www.google.com/ig/api', {'weather': loc})
 		
-		xml = etree.fromstring(w.read())
-		
+		xml = self.get_xml('http://www.google.com/ig/api', {'weather': loc})
 		return self.process_xml(xml)
 		
 	def process_xml(self, xml):
