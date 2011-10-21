@@ -216,4 +216,5 @@ if __name__ == '__main__':
 		try:
 			proc.parser()
 			time.sleep(0.3)
-		except: raise
+		except Exception, e:
+			print e
