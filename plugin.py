@@ -1,7 +1,7 @@
 
 import json
 import urllib2
-from lxml import etree
+from lxml import etree, html
 from urllib import urlencode
 
 class Plugin(object):
@@ -20,6 +20,9 @@ class Plugin(object):
 		opener = urllib2.build_opener()
 		return opener.open(request)
 		
+	def get_html(self, url, params=None):
+		return html.fromstring(self.build_query(url, params).read())
+	
 	def get_json(self, url, params=None):
 		return json.loads(self.build_query(url, params).read())
 		
