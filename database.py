@@ -109,7 +109,7 @@ class Database:
 	
 	def select_all(self, table):
 		rows = self.session.query(self.tables[table])
-		return rows
+		return rows.all()
 	
 	def update(self, table, where, value):
 		"""""update('tablename str', {'field': 'where_value'}, {'field', 'new_value'})"""
