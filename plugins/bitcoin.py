@@ -12,5 +12,5 @@ class Bitcoin(Plugin):
 		
 		data = self.get_json("https://mtgox.com/code/data/ticker.php")
 		ticker = data['ticker']
-		return "Current: $%(buy).2f\ - High: $%(high).2f" \
-			" - Low: $%(low).2f\ - Volume: %(vol)s" % ticker
+		return "Current: $%(buy).2f - High: $%(high).2f" \
+			" - Low: $%(low).2f - Volume: %(vol)s" % ticker
