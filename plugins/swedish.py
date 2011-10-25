@@ -8,7 +8,7 @@ class Swedish(Plugin):
 		super(Swedish, self).__init__(name, dong)
 		
 	def swedish(self, callback, who, arg):
-		subs = ((r'a([nu])', r'u\1'),
+		self.subs = ((r'a([nu])', r'u\1'),
 			(r'A([nu])', r'U\1'),
 			(r'a\B', r'e'),
 			(r'A\B', r'E'),
