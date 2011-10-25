@@ -46,6 +46,10 @@ class Suggest(Plugin):
 		
 		random_sug = self.dong.db.get_random_row('suggest')
 		res = self.google_suggest(callback, who, random_sug[2])
-		return res
+		
+		w = res.split()
+		if w[0] in ('what', 'why', 'where', 'who', 'which', 'whom', 'when', 'how', 'is', 'are'):
+			res = res + '?'
+		return res.capitalize()
 
 	
