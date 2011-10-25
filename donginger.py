@@ -116,7 +116,7 @@ class Processor:
 	
 	def __init__(self):
 		self.ansi_pat = re.compile('\033\[[0-9;]+m')
-		self.chat_pat = re.compile("\[(%s)\] (.+?) (says|asks|exclaims), \"(.+)\"" % '|'.join(dong.config['monitored_nets']))
+		self.chat_pat = re.compile("\[(%s)\] (.+?) (says|asks|exclaims), \"(.+)\"" % '|'.join(dong.config['monitored_nets'].keys()))
 		
 		# Line format is specific to each game/server and this will have to be adapted.
 		# In the case of HellMOO, the format is as follow:
@@ -153,10 +153,12 @@ class Processor:
 		# Proper paging using the 'page' command
 		# Quite an ugly hack
 		elif verb == 'page':
+			# This bit remove Donginger's name from the actual text
 			prefix = [alias for alias in dong.config['aliases'] if line.startswith(alias)]
 			for p in prefix:
 				line = re.sub("^%s " % p, '', line)
-			self.process_line(caller_name, line, caller_name)
+	
+			self.process_line(caller_name, line, caller_name, page=True)
 
 		# This is for direct verb commands (ex. 'nudge')
 		elif verb in dong.commands:
@@ -177,8 +179,8 @@ class Processor:
 	def archive_line(self, channel, caller, line):
 		dong.db.insert(channel, {'time': datetime.now(), 'author': caller, 'message': line})
 			
-	def process_line(self, caller, line, channel=None):
-		"""Find if a command is triggered and do post-callback processing."""
+	def process_line(self, caller, line, source, page=False):
+		"""Find if a command is triggered and do post-dispatch processing."""
 		
 		cmd = self.match_command(line)
 		if cmd:
@@ -187,9 +189,11 @@ class Processor:
 			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], line, caller, argstr)
 			
 			if response:
-				if channel == 'dongnet':
-					con.write("%s %s" % (channel[:-3], response))
-				elif channel is None:
+				if page:
+					con.write("page %s %s" % (caller, response))
+				elif source in dong.config['monitored_nets'].keys() and dong.config['monitored_nets'][source] == 'read-write':
+					con.write("%s %s" % (source[:-3], response))
+				else:
 					con.write("-%s %s" % (caller, response))
 
 		if channel and channel in dong.config['archival']:
