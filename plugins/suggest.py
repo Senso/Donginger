@@ -17,11 +17,7 @@ class Suggest(Plugin):
 		if suggestions:
 			suggestions = self.remove_lyrics(suggestions)
 			random_sug = choice(suggestions)
-			try:
-				self.store_suggestion(who, arg)
-			except IntegrityError:
-				# Skip errors related to UNIQUE constraint.
-				pass
+			self.store_suggestion(who, arg)
 			return random_sug
 			
 	def remove_lyrics(self, sug):
