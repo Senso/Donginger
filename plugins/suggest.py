@@ -17,7 +17,11 @@ class Suggest(Plugin):
 		if suggestions:
 			suggestions = self.remove_lyrics(suggestions)
 			random_sug = choice(suggestions)
-			self.store_suggestion(who, arg)
+			try:
+				self.store_suggestion(who, arg)
+			except IntegrityError:
+				# Skip errors related to UNIQUE constraint.
+				pass
 			return random_sug
 			
 	def remove_lyrics(self, sug):
@@ -41,7 +45,7 @@ class Suggest(Plugin):
 		"""Nudging the bot makes it return a random Google suggestion."""
 		
 		random_sug = self.dong.db.get_random_row('suggest')
-		res = self.google_suggest(who, random_sug[2])
+		res = self.google_suggest(callback, who, random_sug[2])
 		return res
 
 	
