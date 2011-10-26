@@ -6,10 +6,9 @@ from urllib import urlencode
 
 class Plugin(object):
 	
-	def __init__(self, name, dong):
-		self.name = name
+	def __init__(self, dong, conf):
 		self.dong = dong
-		self.conf = self.dong.plugins_conf[name]
+		self.conf = conf
 		
 	def build_query(self, url, params=None):
 		if params:
