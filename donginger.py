@@ -45,9 +45,28 @@ def parse_conf():
 			dong.db.create_table(table_schema)
 	
 	# Load individual plugins config
-	config_set = set(glob.glob(os.path.join("conf", "*.conf")))
-	for filename in config_set:
-		load_config(filename)
+	#config_set = set(glob.glob(os.path.join("conf", "*.conf")))
+	#for filename in config_set:
+	#	load_config(filename)
+		
+	# Importing the .py plugins THEN loading its config, if it exists.
+	plugin_set = set(glob.glob(os.path.join("plugins", "*.py")))
+	for filename in plugin_set:
+		load_plugin(filename)
+		
+def load_plugin(filename):
+	module = re.sub('plugins/', '', filename)
+	module = re.sub('\.py', '', module)
+	
+	if os.path.exists("conf/%s.conf" % module):
+		plug_conf = load_config("conf/%s.conf" % module)
+	else:
+		# Build a dummy minimal config set
+		plug_conf = {"callbacks": {module: module + '_callback'}}
+	
+	plug_entry = getattr(module, module.capitalize())
+	dong.plugins[module] = plug_entry(dong, plug_conf)
+
 		
 def load_plugins():
 	"""Load an instance of each plugin class and create the DB tables if needed."""
@@ -77,12 +96,14 @@ def load_config(file):
 	except ValueError, e:
 		print "Error parsing plugin configuration %s:" % file, e
 		sys.exit(1)
-		
-	try:
-		dong.plugins_conf[config_json['plugin_name']] = config_json
-	except:
-		# Not a plugin
-		pass
+
+	#try:
+	#	dong.plugins_conf[config_json['plugin_name']] = config_json
+	#except:
+	#	# Not a plugin
+	#	pass
+	
+	return config_json
 
 class TelnetConnector:
 	def __init__(self):
