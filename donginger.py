@@ -43,13 +43,8 @@ def parse_conf():
 								}
 							]
 			dong.db.create_table(table_schema)
-	
-	# Load individual plugins config
-	#config_set = set(glob.glob(os.path.join("conf", "*.conf")))
-	#for filename in config_set:
-	#	load_config(filename)
 		
-	# Importing the .py plugins THEN loading its config, if it exists.
+	# Importing the .py plugins then loading its config, if it exists.
 	plugin_set = set(glob.glob(os.path.join("plugins", "*.py")))
 	for filename in plugin_set:
 		load_plugin(filename)
@@ -69,6 +64,17 @@ def load_plugin(filename):
 	
 	plug_entry = getattr(__import__(module), module.capitalize())
 	dong.plugins[module] = plug_entry(dong, plug_conf)
+	
+	try:
+		tbl_info = plug_conf['db_tables']
+	except:
+		# No tables defined
+		return
+		
+	# Create the necessary tables for that plugin
+	for table in tbl_info.items():
+		dong.db.create_table(table)
+	dong.db.metadata.create_all(dong.db.con)
 
 		
 def load_plugins():
