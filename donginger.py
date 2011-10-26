@@ -64,7 +64,7 @@ def load_plugin(filename):
 		# Build a dummy minimal config set
 		plug_conf = {"callbacks": {module: module + '_callback'}}
 	
-	plug_entry = getattr(module, module.capitalize())
+	plug_entry = getattr(__import__(module, module.capitalize()))
 	dong.plugins[module] = plug_entry(dong, plug_conf)
 
 		
