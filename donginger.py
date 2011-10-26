@@ -222,7 +222,6 @@ if __name__ == '__main__':
 	dong.db.create_session()
 	
 	parse_conf()
-	load_plugins()
 	
 	con = TelnetConnector()
 	con.connect()
