@@ -76,28 +76,6 @@ def load_plugin(filename):
 		dong.db.create_table(table)
 	dong.db.metadata.create_all(dong.db.con)
 
-		
-def load_plugins():
-	"""Load an instance of each plugin class and create the DB tables if needed."""
-	
-	for plugin in dong.plugins_conf.items():
-		plug_entry = getattr(__import__(plugin[1]['file']),plugin[1]['file'].capitalize())
-		dong.plugins[plugin[1]['plugin_name']] = plug_entry(plugin[0], dong)
-		
-		for call in plugin[1]['callbacks'].items():
-			dong.commands[call[0]] = [plugin[0], call[1]]
-			
-		# Catches plugins which don't need a DB
-		try:
-			tbl_info = dong.plugins_conf[plugin[0]]['db_tables']
-		except:
-			continue
-		
-		# Create the necessary tables for that plugin
-		for table in tbl_info.items():
-			dong.db.create_table(table)
-		dong.db.metadata.create_all(dong.db.con)
-
 def load_config(file):
 	try:
 		config_json = json.load(open(file))
