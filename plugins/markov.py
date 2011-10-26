@@ -15,8 +15,8 @@ class Markov(Plugin):
 	class START(object):pass
 	class END(object):pass
 
-	def __init__(self, name, dong):
-		super(Markov, self).__init__(name, dong)
+	def __init__(self, dong, conf):
+		super(Markov, self).__init__(dong, conf)
 
 		self.wordpat = re.compile('.*?([a-zA-Z0-9\'\-]+).*?')
 		self.texts = self.conf['texts'] 

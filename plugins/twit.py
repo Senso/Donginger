@@ -6,8 +6,8 @@ from random import randrange
 from plugin import Plugin
 
 class Twit(Plugin):
-	def __init__(self, name, dong):
-		super(Twit, self).__init__(name, dong)
+	def __init__(self, dong, conf):
+		super(Twit, self).__init__(dong, conf)
 		self.api = twitter.Api(consumer_key=self.conf['consumer_key'],consumer_secret=self.conf['consumer_secret'],access_token_key=self.conf['access_token_key'],access_token_secret=self.conf['access_token_secret'])
 		
 	def remove_unicode(self, str):

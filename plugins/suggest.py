@@ -4,8 +4,8 @@ from plugin import Plugin
 from random import choice
 
 class Suggest(Plugin):
-	def __init__(self, name, dong):
-		super(Suggest, self).__init__(name, dong)
+	def __init__(self, dong, conf):
+		super(Suggest, self).__init__(dong, conf)
 		
 	def google_suggest(self, callback, who, arg):
 		"""<suggest string> - returns a random Google Suggestion based on the string."""

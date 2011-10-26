@@ -2,8 +2,8 @@
 from plugin import Plugin
 
 class Help(Plugin):
-	def __init__(self, name, dong):
-		super(Help, self).__init__(name, dong)
+	def __init__(self, dong, conf):
+		super(Help, self).__init__(dong, conf)
 		
 	def help(self, callback, who, cmd):
 		"""The help command."""

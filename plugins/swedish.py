@@ -4,8 +4,8 @@ import re
 from plugin import Plugin
 
 class Swedish(Plugin):
-	def __init__(self, name, dong):
-		super(Swedish, self).__init__(name, dong)
+	def __init__(self, dong, conf):
+		super(Swedish, self).__init__(dong, conf)
 		
 	def swedish(self, callback, who, arg):
 		self.subs = ((r'a([nu])', r'u\1'),

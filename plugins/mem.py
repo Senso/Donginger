@@ -7,8 +7,8 @@ import re
 from plugin import Plugin
 
 class Mem(Plugin):
-	def __init__(self, name, dong):
-		super(Mem, self).__init__(name, dong)
+	def __init__(self, dong, conf):
+		super(Mem, self).__init__(dong, conf)
 		
 	def show_mem(self, callback, who, cmd):
 		"""Returns the bot's current memory usage."""

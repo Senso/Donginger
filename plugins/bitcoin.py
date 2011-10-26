@@ -4,8 +4,8 @@
 from plugin import Plugin
 
 class Bitcoin(Plugin):
-	def __init__(self, name, dong):
-		super(Bitcoin, self).__init__(name, dong)
+	def __init__(self, dong, conf):
+		super(Bitcoin, self).__init__(dong, conf)
 		
 	def bitcoin(self, callback, who, loc):
 		"""Gets the current exchange rate for bitcoins from mtgox."""
