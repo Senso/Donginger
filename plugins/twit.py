@@ -86,9 +86,8 @@ class Twit(Plugin):
 		
 		riot = re.search('random tweet (.+)', callback)
 		if riot:
-			who,msg = self.sendRandomTweet(riot.group(1))
-			self.tn.write("Sent to %s\n" % who)
-
+			return self.random_tweet(callback, who, riot.group(1))
+			
 	def post_tweet_to(self, who, msg):
 		msg = self.remove_unicode(msg)
 		if msg:
