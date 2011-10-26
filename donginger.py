@@ -160,11 +160,11 @@ class Processor:
 			for p in prefix:
 				line = re.sub("^%s " % p, '', line)
 	
-			self.process_line(caller_name, line, caller_name, page=True)
+			self.process_line(caller_name, verb + ' ' + line, caller_name, page=True)
 
 		# This is for direct verb commands (ex. 'nudge')
 		elif verb in dong.commands:
-			self.process_line(caller_name, verb, caller_name)
+			self.process_line(caller_name, line, caller_name)
 		
 		# net (channel) talk	
 		net_match = re.search(self.chat_pat, line)
