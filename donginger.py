@@ -62,9 +62,12 @@ def load_plugin(filename):
 		plug_conf = load_config("conf/%s.conf" % module)
 	else:
 		# Build a dummy minimal config set
-		plug_conf = {"callbacks": {module: module + '_callback'}}
+		plug_conf = {"callbacks": {module: module}}
+		
+	for call in plug_conf['callbacks'].items():
+		dong.commands[call[0]] = [module, call[1]]
 	
-	plug_entry = getattr(__import__(module, module.capitalize()))
+	plug_entry = getattr(__import__(module), module.capitalize())
 	dong.plugins[module] = plug_entry(dong, plug_conf)
 
 		
