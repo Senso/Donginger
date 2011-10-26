@@ -10,7 +10,7 @@ class Mem(Plugin):
 	def __init__(self, dong, conf):
 		super(Mem, self).__init__(dong, conf)
 		
-	def show_mem(self, callback, who, cmd):
+	def mem(self, callback, who, cmd):
 		"""Returns the bot's current memory usage."""
 		
 		if os.name == 'posix':
