@@ -96,12 +96,6 @@ def load_config(file):
 	except ValueError, e:
 		print "Error parsing plugin configuration %s:" % file, e
 		sys.exit(1)
-
-	#try:
-	#	dong.plugins_conf[config_json['plugin_name']] = config_json
-	#except:
-	#	# Not a plugin
-	#	pass
 	
 	return config_json
 
