@@ -7,7 +7,7 @@ class Suggest(Plugin):
 	def __init__(self, dong, conf):
 		super(Suggest, self).__init__(dong, conf)
 		
-	def google_suggest(self, callback, who, arg):
+	def google_suggest(self, callback, who, arg, store=True):
 		"""<suggest string> - returns a random Google Suggestion based on the string."""
 		
 		w = self.build_query('http://google.com/complete/search', {'q': arg})
@@ -17,7 +17,8 @@ class Suggest(Plugin):
 		if suggestions:
 			suggestions = self.remove_lyrics(suggestions)
 			random_sug = choice(suggestions)
-			self.store_suggestion(who, arg)
+			if store:
+				self.store_suggestion(who, arg)
 			return random_sug
 			
 	def remove_lyrics(self, sug):
@@ -41,7 +42,7 @@ class Suggest(Plugin):
 		"""Nudging the bot makes it return a random Google suggestion."""
 		
 		random_sug = self.dong.db.get_random_row('suggest')
-		res = self.google_suggest(callback, who, random_sug[2])
+		res = self.google_suggest(callback, who, random_sug[2], False)
 		
 		w = res.split()
 		if w[0] in ('what', 'why', 'where', 'who', 'which', 'whom', 'when', 'how', 'is', 'are'):
