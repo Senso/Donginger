@@ -29,6 +29,8 @@ class Weather(Plugin):
 				self.dong.db.insert('weather', {'user': who, 'location': loc})
 		
 		xml = self.get_xml('http://www.google.com/ig/api', {'weather': loc})
+		# Strip funky UTF8 characters
+		xml = xml.encode('ascii', 'ignore')
 		return self.process_xml(xml)
 		
 	def process_xml(self, xml):
