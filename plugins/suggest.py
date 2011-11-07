@@ -26,9 +26,10 @@ class Suggest(Plugin):
 					pass
 				random_sug = choice(suggestions)
 				
-			if store:
-				self.store_suggestion(who, arg)
-			return random_sug
+			if random_sug:
+				if store:
+					self.store_suggestion(who, arg)
+				return random_sug
 			
 	def remove_lyrics(self, sug):
 		filtered_list = []
