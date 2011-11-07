@@ -17,6 +17,15 @@ class Suggest(Plugin):
 		if suggestions:
 			suggestions = self.remove_lyrics(suggestions)
 			random_sug = choice(suggestions)
+			
+			# Same string as we started with - roll again
+			if random_sug == arg:
+				try:
+					suggestions.pop(suggestions.index(random_sug))
+				except:
+					pass
+				random_sug = choice(suggestions)
+				
 			if store:
 				self.store_suggestion(who, arg)
 			return random_sug
