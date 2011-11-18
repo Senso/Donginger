@@ -7,6 +7,8 @@ class Rand(Plugin):
 		super(Rand, self).__init__(dong, conf)
 		
 	def random_line(self, callback, who, arg):
+		"""Returns a random line said on a network by the player given in argument"""
+		
 		all_lines = []
 		for net in self.dong.config['archival']:
 			rows = self.dong.db.select_where(net, ('author', arg), field='message')
