@@ -123,7 +123,7 @@ class Processor:
 		# Line format is specific to each game/server and this will have to be adapted.
 		# In the case of HellMOO, the format is as follow:
 		# bot_objnum caller_name (caller_objnum) verb argstr
-		self.line_pat = re.compile('(\#[0-9]+) (.+) \((\#[0-9]+)\) (.+?) (.+)')
+		self.line_pat = re.compile('(\#[0-9]+) (.+) \((\#[0-9]+)\) (.+?) (.+)', re.I)
 		
 	def strip_ansi(self, str):
 		return self.ansi_pat.sub('', str)
@@ -135,7 +135,7 @@ class Processor:
 		buf = buf.strip('\r\n')
 		buf = self.strip_ansi(buf)
 		
-		buf_match = re.search(self.line_pat, buf, re.I)
+		buf_match = re.search(self.line_pat, buf)
 		if buf_match:
 			caller_name = buf_match.group(2)
 			caller_obj  = buf_match.group(3)
