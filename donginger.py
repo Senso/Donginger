@@ -219,6 +219,10 @@ class Processor:
 				if cmd_match:
 					return cmd
 
+			# Priority to commands matching the exact name
+			elif line.split()[0] == cmd:
+				return cmd
+			
 			# Standard: line starts with the command
 			elif line.startswith(cmd):
 				return cmd
