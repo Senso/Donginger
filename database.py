@@ -111,10 +111,15 @@ class Database:
 		rows = self.session.query(self.tables[table])
 		return rows.all()
 		
-	def select_where(self, table, where):
-		where_field = getattr(table.c, where[0])
+	def select_where(self, table, where, field=None):
+		if field is not None:
+			select_field = getattr(self.tables[table].c, field)
+		else:
+			select_field = table
+			
+		where_field = getattr(self.tables[table].c, where[0])
 		where_value = where[1]
-		return self.session.query(self.tables[table]).filter(where_field == where_value)
+		return self.session.query(select_field).filter(where_field == where_value).all()
 	
 	def update(self, table, where, value):
 		"""""update('tablename str', {'field': 'where_value'}, {'field', 'new_value'})"""
