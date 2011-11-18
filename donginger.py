@@ -200,8 +200,8 @@ class Processor:
 			argstr = line[len(cmd):]
 			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], line, caller, argstr)
 			
-			if type(response) == 'tuple':
-				for r_line in respone:
+			if type(response) == tuple:
+				for r_line in response:
 					spew(r_line)
 			elif response:
 				spew(response)
