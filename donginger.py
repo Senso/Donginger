@@ -135,7 +135,7 @@ class Processor:
 		buf = buf.strip('\r\n')
 		buf = self.strip_ansi(buf)
 		
-		buf_match = re.search(self.line_pat, buf)
+		buf_match = re.search(self.line_pat, buf, re.I)
 		if buf_match:
 			caller_name = buf_match.group(2)
 			caller_obj  = buf_match.group(3)
