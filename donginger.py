@@ -186,19 +186,25 @@ class Processor:
 	def process_line(self, caller, line, source, page=False):
 		"""Find if a command is triggered and do post-dispatch processing."""
 		
+		def spew(resp):
+			if page:
+				con.write("page %s %s" % (caller, resp))
+			elif source in dong.config['monitored_nets'].keys() and dong.config['monitored_nets'][source] == 'read-write':
+				con.write("%s %s" % (source[:-3], resp))
+			else:
+				con.write("-%s %s" % (caller, resp))
+
 		cmd = self.match_command(line)
 		if cmd:
 			# This removes the command from the line of text itself, leaving on the rest
 			argstr = line[len(cmd):]
 			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], line, caller, argstr)
 			
-			if response:
-				if page:
-					con.write("page %s %s" % (caller, response))
-				elif source in dong.config['monitored_nets'].keys() and dong.config['monitored_nets'][source] == 'read-write':
-					con.write("%s %s" % (source[:-3], response))
-				else:
-					con.write("-%s %s" % (caller, response))
+			if type(response) == 'tuple':
+				for r_line in respone:
+					spew(r_line)
+			elif response:
+				spew(response)
 
 		# Let's not archive commands themselves, that would be dumb
 		if not cmd:
@@ -206,12 +212,17 @@ class Processor:
 				self.archive_line(source, caller, line)
 			
 	def match_command(self, line):
-		commands = dong.commands.keys()
-		command = [cmd for cmd in commands if line.startswith(cmd)]
-		
-		if len(command) == 1:
-			return command[0]
+		for cmd in dong.commands.keys():
+			# wildcards in commands
+			if cmd.find('<%>') > -1:
+				cmd_match = re.search(cmd.replace('<%>', '(.+)'), line)
+				if cmd_match:
+					return cmd
 
+			# Standard: line starts with the command
+			elif line.startswith(cmd):
+				return cmd
+			
 		return None
 
 
