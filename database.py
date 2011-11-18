@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Table, Column, Integer, DateTime, String, MetaData
 from sqlalchemy.schema import UniqueConstraint
-from sqlalchemy.sql import select
+from sqlalchemy.sql import select, func
 from sqlalchemy.exc import IntegrityError
 
 class Database:
@@ -119,7 +119,7 @@ class Database:
 			
 		where_field = getattr(self.tables[table].c, where[0])
 		where_value = where[1]
-		return self.session.query(select_field).filter(where_field == where_value).all()
+		return self.session.query(select_field).filter(func.lower(where_field) == where_value.lower()).all()
 	
 	def update(self, table, where, value):
 		"""""update('tablename str', {'field': 'where_value'}, {'field', 'new_value'})"""
