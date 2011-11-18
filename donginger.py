@@ -200,8 +200,10 @@ class Processor:
 				else:
 					con.write("-%s %s" % (caller, response))
 
-		if source and source in dong.config['archival']:
-			self.archive_line(source, caller, line)
+		# Let's not archive commands themselves, that would be dumb
+		if not cmd:
+			if source and source in dong.config['archival']:
+				self.archive_line(source, caller, line)
 			
 	def match_command(self, line):
 		commands = dong.commands.keys()
