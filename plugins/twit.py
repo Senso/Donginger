@@ -84,7 +84,7 @@ class Twit(Plugin):
 	def riot_tweet(self, callback, who, msg):
 		"""Tweets the ouput of @riotkrrn"""
 		
-		riot = re.search('random tweet (.+)', callback)
+		riot = re.search('randtweet (.+)', callback)
 		if riot:
 			return self.random_tweet(callback, who, riot.group(1))
 			
