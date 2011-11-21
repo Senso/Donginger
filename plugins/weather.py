@@ -30,7 +30,6 @@ class Weather(Plugin):
 		
 		xml = self.get_xml('http://www.google.com/ig/api', {'weather': loc})
 		# Strip funky UTF8 characters
-		xml = xml.encode('ascii', 'ignore')
 		return self.process_xml(xml)
 		
 	def process_xml(self, xml):
@@ -53,7 +52,7 @@ class Weather(Plugin):
 		except:
 			return None
 		
-		return output
+		return output.encode('ascii', 'ignore')
 		
 		
 		
