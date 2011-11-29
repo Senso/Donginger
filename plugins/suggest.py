@@ -14,7 +14,7 @@ class Suggest(Plugin):
 
 		if sugs is not None:
 			try:
-				sugs = [x[0].get('data') for x in suggestions]
+				sugs = [x[0].get('data') for x in sugs]
 			except Exception, e:
 				print "XML error with Google Suggest: %s" % e
 			
@@ -37,8 +37,8 @@ class Suggest(Plugin):
 	def remove_lyrics(self, sug):
 		filtered_list = []
 		for s in sug:
-			if s[0].find('lyrics') > -1: pass
-			else: filtered_list.append(s[0])
+			if s.find('lyrics') > -1: pass
+			else: filtered_list.append(s)
 		return filtered_list
 	
 	def store_suggestion(self, who, sug):
