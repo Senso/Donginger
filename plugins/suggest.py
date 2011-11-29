@@ -10,12 +10,15 @@ class Suggest(Plugin):
 	def google_suggest(self, callback, who, arg, store=True):
 		"""<suggest string> - returns a random Google Suggestion based on the string."""
 		
-		w = self.build_query('http://google.com/complete/search', {'q': arg})
-		page = w.read()
-		page_json = page.split('(', 1)[1][:-1]
-		suggestions = json.loads(page_json)[1]
-		if suggestions:
-			suggestions = self.remove_lyrics(suggestions)
+		sugs = self.get_xml('http://google.com/complete/search', {'output':'toolbar', 'q': arg})
+
+		if sugs is not None:
+			try:
+				sugs = [x[0].get('data') for x in suggestions]
+			except Exception, e:
+				print "XML error with Google Suggest: %s" % e
+			
+			suggestions = self.remove_lyrics(sugs)
 			random_sug = choice(suggestions)
 			
 			# Same string as we started with - roll again
@@ -26,7 +29,7 @@ class Suggest(Plugin):
 					pass
 				random_sug = choice(suggestions)
 				
-			if random_sug:
+			if random_sug is not None:
 				if store:
 					self.store_suggestion(who, arg)
 				return random_sug
