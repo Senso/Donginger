@@ -32,6 +32,9 @@ class Suggest(Plugin):
 			if random_sug is not None:
 				if store:
 					self.store_suggestion(who, arg)
+				w = random_sug.split()
+				if w[0].lower() in ('what', 'why', 'was', 'where', 'who', 'which', 'whom', 'when', 'how', 'is', 'are', 'did'):
+					random_sug = random_sug + '?'
 				return random_sug
 			
 	def remove_lyrics(self, sug):
