@@ -9,13 +9,13 @@ class Google(Plugin):
 	def google(self, callback, who, arg):
 		"""<google string> - returns a random Google result."""
 		
-		parsed = self.api_get('web', inp)
+		parsed = self.api_get('web', arg)
 		if not 200 <= parsed['responseStatus'] < 300:
 			return
 		if not parsed['responseData']['results']:
 			return
 		
-		result = parsed['responseData']['results'][0]
+		result = choice(parsed['responseData']['results'])
 
 		title = self.unescape(result['titleNoFormatting'])
 		content = self.unescape(result['content'])
@@ -23,12 +23,12 @@ class Google(Plugin):
 		if len(content) == 0:
 			content = "No description available"
 		else:
-			content = self.html.fromstring(content).text_content()
+			content = self.fromstring(content)
 			
-		out = '%s -- \x02%s\x02: "%s"' % (result['unescapedUrl'], title, content)
+		out = '%s' % content
 		out = ' '.join(out.split())
 
-		if len(out) > 300:
+		if len(out) > 500:
 			out = out[:out.rfind(' ')] + '..."'
 
 		return out
@@ -36,4 +36,4 @@ class Google(Plugin):
 	def api_get(self, kind, query):
 		url = 'http://ajax.googleapis.com/ajax/services/search/%s?' \
 			'v=1.0&safe=off'
-		return self.get_json(url % kind, q=query)
+		return self.get_json(url % kind, params={'q': query})

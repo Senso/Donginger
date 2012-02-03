@@ -13,7 +13,10 @@ class Plugin(object):
 	def build_query(self, url, params=None):
 		if params:
 			query_string = urlencode(params)
-			request = urllib2.Request(url + '?' + query_string)
+			if url.find('?') > -1:	
+				request = urllib2.Request(url + '&' + query_string)
+			else:
+				request = urllib2.Request(url + '?' + query_string)
 		else:
 			request = urllib2.Request(url)
 		opener = urllib2.build_opener()
@@ -28,8 +31,11 @@ class Plugin(object):
 	def get_xml(self, url, params=None):
 		return (etree.fromstring(self.build_query(url, params).read()))
 		
-	def unescape(s):
+	def unescape(self, s):
 		if not s.strip():
 			return s
 		return html.fromstring(s).text_content()
+		
+	def fromstring(self, str):
+		return html.fromstring(str)
 		
