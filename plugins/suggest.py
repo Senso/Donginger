@@ -58,7 +58,7 @@ class Suggest(Plugin):
 		res = self.google_suggest(callback, who, random_sug[2], False)
 		
 		w = res.split()
-		if w[0] in ('what', 'why', 'was', 'where', 'who', 'which', 'whom', 'when', 'how', 'is', 'are', 'did'):
+		if w[0].lower() in ('what', 'why', 'was', 'where', 'who', 'which', 'whom', 'when', 'how', 'is', 'are', 'did'):
 			res = res + '?'
 		return res.capitalize()
 
