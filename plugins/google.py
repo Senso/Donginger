@@ -27,9 +27,7 @@ class Google(Plugin):
 			
 		out = '%s' % content
 		out = ' '.join(out.split())
-
-		if len(out) > 500:
-			out = out[:out.rfind(' ')] + '..."'
+		out = out.strip('...')
 
 		return out
 		
