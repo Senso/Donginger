@@ -28,3 +28,8 @@ class Plugin(object):
 	def get_xml(self, url, params=None):
 		return (etree.fromstring(self.build_query(url, params).read()))
 		
+	def unescape(s):
+		if not s.strip():
+			return s
+		return html.fromstring(s).text_content()
+		
