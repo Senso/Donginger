@@ -37,5 +37,5 @@ class Plugin(object):
 		return html.fromstring(s).text_content()
 		
 	def fromstring(self, str):
-		return html.fromstring(str)
+		return html.fromstring(str).text_content()
 		
