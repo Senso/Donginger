@@ -113,6 +113,6 @@ class Twit(Plugin):
 		shit_names = []
 		if shitlist:
 			for i in shitlist:
-				shit.names.append(i[1])
+				shit_names.append(i[1])
 			return ', '.join(shit_names)
 		
