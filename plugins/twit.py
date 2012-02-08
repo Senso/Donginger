@@ -108,5 +108,8 @@ class Twit(Plugin):
 			except Exception,e:
 				print "HTTP 500 error: %s" % e
 				
-				
-
+	def show_shitlist(self, callback, who, arg):
+		shitlist = self.dong.db.select_all('twitter_hitlist')
+		if shitlist:
+			return ', '.join(shitlist)
+		
