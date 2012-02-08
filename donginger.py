@@ -152,7 +152,8 @@ class Processor:
 		elif verb[0] in ('`', '-', '\'') and verb[1:].lower() in dong.config['aliases']:
 			if verb[0] == '\'':
 				verb = 'page'
-			self.process_line(caller_name, line, caller_name)
+			else:
+				self.process_line(caller_name, line, caller_name)
 			
 		# Proper paging using the 'page' command
 		# Quite an ugly hack
