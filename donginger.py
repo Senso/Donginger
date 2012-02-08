@@ -154,10 +154,11 @@ class Processor:
 				verb = 'page'
 			else:
 				self.process_line(caller_name, line, caller_name)
+				return
 			
 		# Proper paging using the 'page' command
 		# Quite an ugly hack
-		elif verb == 'page':
+		if verb == 'page':
 			# This bit remove Donginger's name from the actual text
 			prefix = [alias for alias in dong.config['aliases'] if line.startswith(alias)]
 			for p in prefix:
