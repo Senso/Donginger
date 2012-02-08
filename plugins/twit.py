@@ -109,6 +109,8 @@ class Twit(Plugin):
 				print "HTTP 500 error: %s" % e
 				
 	def show_shitlist(self, callback, who, arg):
+		"""Shows the full Shitlist (potential random targets of nasty tweets)"""
+		
 		shitlist = self.dong.db.select_all('twitter_hitlist')
 		shit_names = []
 		if shitlist:
@@ -117,6 +119,8 @@ class Twit(Plugin):
 			return ', '.join(shit_names)
 			
 	def show_tags(self, callback, who, arg):
+		"""Shows the full list of random tags that can be appended to random tweets"""
+		
 		tags = self.dong.db.select_all('twitter_tags')
 		tag_names = []
 		if tags:
