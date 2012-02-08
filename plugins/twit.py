@@ -110,6 +110,9 @@ class Twit(Plugin):
 				
 	def show_shitlist(self, callback, who, arg):
 		shitlist = self.dong.db.select_all('twitter_hitlist')
+		shit_names = []
 		if shitlist:
-			return ', '.join(shitlist)
+			for i in shitlist:
+				shit.names.append(i[1])
+			return ', '.join(shit_names)
 		
