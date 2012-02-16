@@ -82,7 +82,7 @@ class Twit(Plugin):
 		return self.post_tweet_to(target, msg)
 		
 	def riot_tweet(self, callback, who, msg):
-		"""Tweets the ouput of @riotkrrn"""
+		"""Tweets the ouput of @riotkrrn. Only works if you're in the same room as Donginger."""
 		
 		riot = re.search('randtweet (.+)', callback)
 		if riot:
@@ -99,7 +99,7 @@ class Twit(Plugin):
 				print "HTTP error: %s" % e
 
 	def post_tweet(self, callback, who, msg):
-		"""Posts a raw tweet."""
+		"""Posts a direct tweet."""
 		
 		msg = self.remove_unicode(msg)
 		if msg:
