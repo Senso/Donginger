@@ -1,4 +1,5 @@
 from plugin import Plugin
+from random import choice
 
 class Dictionary(Plugin):
 	def __init__(self, dong, conf):
@@ -13,15 +14,17 @@ class Dictionary(Plugin):
 
 		if page['result_type'] == 'no_results':
 			return 'not found.'
+		
+		if defs:
+			rdef = choice(defs)
+			out = rdef['word'] + ': ' + rdef['definition']
+		
+			if len(out) > 400:
+				out = out[:out.rfind(' ', 0, 400)] + '...'
+		
+			return out
 	
-		out = defs[0]['word'] + ': ' + defs[0]['definition']
-	
-		if len(out) > 400:
-			out = out[:out.rfind(' ', 0, 400)] + '...'
-	
-		return out
-	
-	def etymology(inp):
+	def etymology(self, callback, who, arg):
 		"""Returns the etymology of the given word"""
 	
 		url = 'http://www.etymonline.com/index.php'
