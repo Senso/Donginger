@@ -61,7 +61,7 @@ class Markov(Plugin):
 		
 		return chain
 		
-	def random_output(self, chain, words=12, tmp=False):
+	def random_output(self, chain, words=20, tmp=False):
 		output = []
 		
 		if tmp is not True:
