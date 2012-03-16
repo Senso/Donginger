@@ -1,7 +1,7 @@
 
 import re
 import twitter
-from random import randrange
+from random import randrange, choice
 
 from plugin import Plugin
 
@@ -9,6 +9,7 @@ class Twit(Plugin):
 	def __init__(self, dong, conf):
 		super(Twit, self).__init__(dong, conf)
 		self.api = twitter.Api(consumer_key=self.conf['consumer_key'],consumer_secret=self.conf['consumer_secret'],access_token_key=self.conf['access_token_key'],access_token_secret=self.conf['access_token_secret'])
+		self.replies = open(self.conf['shit_replies']).readlines()
 		
 	def remove_unicode(self, str):
 		newstr = ''
@@ -127,4 +128,19 @@ class Twit(Plugin):
 			for i in tags:
 				tag_names.append(i[1])
 			return ', '.join(tag_names)
+			
+	def twitter_troll(self, callback, who, arg):
+		"""This is a stupid command, to annoy random people on Twitter."""
+		
+		shit_user = self.dong.db.get_random_row('twitter_hitlist')
+		shit_posts = self.api.GetSearch(term='@' + shit_user)
+		shit_post = choice(shit_posts)
+		
+		spost_id = shit_post.id
+		spost_user = shit_post.user
+		
+		reply = "@%s %s %s" % (spost_user.screen_name, choice(self.replies).strip('\n'), tag)
+		new_status = self.api.PostUpdate(reply, in_reply_to_status_id=spost_id)
+		return reply
+		
 		
