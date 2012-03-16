@@ -71,6 +71,8 @@ class Twit(Plugin):
 					tags.append('#' + rand_tag)
 		if tags:
 			return ' '.join(tags)
+		else:
+			return ''
 		
 	def random_tweet(self, callback, who, msg):
 		"""Posts a tweet to a random members of the Shitlist and appends random tags."""
