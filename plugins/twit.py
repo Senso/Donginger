@@ -132,15 +132,17 @@ class Twit(Plugin):
 	def twitter_troll(self, callback, who, arg):
 		"""This is a stupid command, to annoy random people on Twitter."""
 		
-		shit_user = self.dong.db.get_random_row('twitter_hitlist')
-		shit_posts = self.api.GetSearch(term='@' + shit_user)
-		shit_post = choice(shit_posts)
-		
-		spost_id = shit_post.id
-		spost_user = shit_post.user
-		
-		reply = "@%s %s %s" % (spost_user.screen_name, choice(self.replies).strip('\n'), tag)
-		new_status = self.api.PostUpdate(reply, in_reply_to_status_id=spost_id)
-		return reply
-		
+		try:
+			shit_user = self.dong.db.get_random_row('twitter_hitlist')
+			shit_posts = self.api.GetSearch(term='@' + shit_user[1])
+			shit_post = choice(shit_posts)
+			
+			spost_id = shit_post.id
+			spost_user = shit_post.user
+			
+			reply = "@%s %s %s" % (spost_user.screen_name, choice(self.replies).strip('\n'), self.get_random_tags())
+			new_status = self.api.PostUpdate(reply, in_reply_to_status_id=spost_id)
+			return reply
+		except Exception, e:
+			print "twitter_troll: %s" % e
 		
