@@ -147,4 +147,21 @@ class Twit(Plugin):
 			return reply
 		except Exception, e:
 			print "twitter_troll: %s" % e
+			
+	def put_list(self, callback, who, arg):
+		arg = arg.split(' ')
+		if len(arg) != 3:
+			print 'Bad command', arg
+			return
+		
+		if arg[1] != 'in':
+			print 'Bad command', arg, "expected 'in'"
+			return
+		
+		twho = arg[0]
+		tlist = arg[2]
+		
+		tl = self.api.CreateList(twho, list, 'public')
+		if tl:
+			return "List %s created for %s" % (tlist, twho)
 		
