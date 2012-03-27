@@ -1,5 +1,6 @@
 
 import re
+import time
 import twitter
 from random import randrange, choice
 
@@ -137,31 +138,19 @@ class Twit(Plugin):
 		try:
 			shit_user = self.dong.db.get_random_row('twitter_hitlist')
 			shit_posts = self.api.GetSearch(term='@' + shit_user[1])
-			shit_post = choice(shit_posts)
-			
-			spost_id = shit_post.id
-			spost_user = shit_post.user
-			
-			reply = "@%s %s %s" % (spost_user.screen_name, choice(self.replies).strip('\n'), self.get_random_tags())
-			new_status = self.api.PostUpdate(reply, in_reply_to_status_id=spost_id)
-			return reply
+			if shit_posts:
+				shit_post = choice(shit_posts)
+				
+				spost_id = shit_post.id
+				spost_user = shit_post.user
+				
+				reply = "@%s %s %s" % (spost_user.screen_name, choice(self.replies).strip('\n'), self.get_random_tags())
+				new_status = self.api.PostUpdate(reply, in_reply_to_status_id=spost_id)
+				return reply
+			else:
+				time.sleep(1.0)
+				self.twitter_troll(callback, who, arg)
 		except Exception, e:
 			print "twitter_troll: %s" % e
-			
-	def put_list(self, callback, who, arg):
-		arg = arg.split(' ')
-		if len(arg) != 3:
-			print 'Bad command', arg
-			return
-		
-		if arg[1] != 'in':
-			print 'Bad command', arg, "expected 'in'"
-			return
-		
-		twho = arg[0]
-		tlist = arg[2]
-		
-		tl = self.api.CreateList(twho, list, 'public')
-		if tl:
-			return "List %s created for %s" % (tlist, twho)
-		
+			time.sleep(1.0)
+			self.twitter_troll(callback, who, arg)
