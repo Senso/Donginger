@@ -145,8 +145,11 @@ class Twit(Plugin):
 				spost_user = shit_post.user
 				
 				reply = "@%s %s %s" % (spost_user.screen_name, choice(self.replies).strip('\n'), self.get_random_tags())
-				new_status = self.api.PostUpdate(reply, in_reply_to_status_id=spost_id)
-				return reply
+				if len(reply) > 140:
+					self.twitter_troll(callback, who, arg)
+				else:
+					new_status = self.api.PostUpdate(reply, in_reply_to_status_id=spost_id)
+					return reply
 			else:
 				time.sleep(1.0)
 				self.twitter_troll(callback, who, arg)
