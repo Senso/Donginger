@@ -1,10 +1,10 @@
 from plugin import Plugin
 
-class Wu(Plugin):
+class Weather(Plugin):
 	""" Weather Underground plugin. """
 	
 	def __init__(self, dong, conf):
-		super(Wu, self).__init__(dong, conf)
+		super(Weather, self).__init__(dong, conf)
 		
 	def fetch_weather(self, callback, who, loc):
 		"""<weather location> returns the weather for that location. Not providing a location makes it returns the weather of your last used location."""
