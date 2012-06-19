@@ -29,11 +29,23 @@ class Wu(Plugin):
 		try:
 			results = self.get_json("http://api.wunderground.com/api/%s/geolookup/conditions/forecast/q/%s.json" %
 								(self.conf['weather_underground_key'], loc))
-		except:
+			
+			data = {}
+			data['city'] = results['location']['city']
+			data['temp'] = results['current_observation']['temperature_string']
+			data['condition'] = results['current_observation']['weather']
+			data['humidity'] = results['current_observation']['relative_humidity']
+			data['wind'] = results['current_observation']['wind_mph']
+			data['rain_in'] = float(results['current_observation']['precip_today_in'])
+			data['rain_mm'] = float(results['current_observation']['precip_today_metric'])
+			
+			if data['rain_in'] > 0.00 and data['rain_mm'] > 0.00:
+				output = '%(city)s: %(condition)s, %(temp)s, %(humidity)s humidity, %(wind)s MPH winds. Rain today: %(rain_in)s in (%(rain_mm)s mm).' % data
+			else:
+				output = '%(city)s: %(condition)s, %(temp)s, %(humidity)s humidity, %(wind)s MPH winds.' % data
+			
+			return output
+		except Exception, e:
 			# Most likely not JSON
+			print 'Weather JSON error', e
 			return
-		
-		return results
-		#xml = self.get_json('http://www.google.com/ig/api', {'weather': loc})
-		# Strip funky UTF8 characters
-		#return self.process_xml(xml)
