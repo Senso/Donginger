@@ -1,4 +1,5 @@
 from plugin import Plugin
+import urllib
 
 class Weather(Plugin):
 	""" Weather Underground plugin. """
@@ -26,6 +27,8 @@ class Weather(Plugin):
 			else:
 				self.dong.db.insert('weather', {'user': who, 'location': loc})
 		
+		loc = urllib.quote(loc)
+		
 		try:
 			results = self.get_json("http://api.wunderground.com/api/%s/geolookup/conditions/forecast/q/%s.json" %
 								(self.conf['weather_underground_key'], loc))
@@ -47,5 +50,5 @@ class Weather(Plugin):
 			return output
 		except Exception, e:
 			# Most likely not JSON
-			print 'Weather JSON error', e
+			print 'Weather JSON error:', e
 			return
