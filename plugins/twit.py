@@ -78,8 +78,16 @@ class Twit(Plugin):
 	def random_tweet(self, callback, who, msg):
 		"""Posts a tweet to a random members of the Shitlist and appends random tags."""
 		
-		target = self.dong.db.get_random_row('twitter_hitlist')
-		target = target[1]
+		if randrange(1,100) < 25:
+			target = self.dong.db.get_random_row('twitter_hitlist')
+			target = target[1]
+		else:
+			while 1: # Oh this is bad
+				target = self.get_random_target()
+				if target[0] is not None and target[1] is not None:
+					target = target[1].puser.screen_name
+					break
+
 		tags = self.get_random_tags()
 		if tags:
 			msg += ' ' + tags
@@ -148,6 +156,7 @@ class Twit(Plugin):
 			if pid is not None and puser is not None:
 				reply = "@%s %s %s" % (puser.screen_name, choice(self.replies).strip('\n'), self.get_random_tags())
 				if len(reply) > 140:
+					time.sleep(1.0)
 					self.twitter_troll(callback, who, arg)
 				else:
 					new_status = self.api.PostUpdate(reply, in_reply_to_status_id=pid)
