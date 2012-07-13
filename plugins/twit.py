@@ -85,7 +85,7 @@ class Twit(Plugin):
 			while 1: # Oh this is bad
 				target = self.get_random_target()
 				if target[0] is not None and target[1] is not None:
-					target = target[1].puser.screen_name
+					target = target[1].screen_name
 					break
 
 		tags = self.get_random_tags()
