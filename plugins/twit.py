@@ -55,7 +55,7 @@ class Twit(Plugin):
 	def del_target(self, callback, who, name):
 		"""Removes a twitter account from the Shitlist."""
 		
-		dong.db.delete_by_name('twitter_hitlist', ('name', name))
+		self.dong.db.delete_by_name('twitter_hitlist', ('name', name))
 		return 'Target removed from Shitlist.'
 		
 	def get_random_tags(self):
