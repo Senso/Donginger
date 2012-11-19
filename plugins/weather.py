@@ -39,8 +39,14 @@ class Weather(Plugin):
 			data['condition'] = results['current_observation']['weather']
 			data['humidity'] = results['current_observation']['relative_humidity']
 			data['wind'] = results['current_observation']['wind_mph']
-			data['rain_in'] = float(results['current_observation']['precip_today_in'])
-			data['rain_mm'] = float(results['current_observation']['precip_today_metric'])
+			try:
+				data['rain_in'] = float(results['current_observation']['precip_today_in'])
+			except:
+				data['rain_in'] = 0.0
+			try:
+				data['rain_mm'] = float(results['current_observation']['precip_today_metric'])
+			except:
+				data['rain_mm'] = 0.0
 			
 			if data['rain_in'] > 0.00 and data['rain_mm'] > 0.00:
 				output = '%(city)s: %(condition)s, %(temp)s, %(humidity)s humidity, %(wind)s MPH winds. Rain today: %(rain_in)s in (%(rain_mm)s mm).' % data
