@@ -8,6 +8,7 @@ import time
 import glob
 import telnetlib
 from datetime import datetime
+from optparse import OptionParser
 
 # Local imports
 import database
@@ -87,27 +88,36 @@ def load_config(file):
 	return config_json
 
 class TelnetConnector:
-	def __init__(self):
+	def __init__(self, debug):
+		self.debug = debug
 		self.tn = None
 	
 	def connect(self):
 		self.tn = telnetlib.Telnet(dong.config['host'], dong.config['port'])
-		self.read_until(" connected)")
+		self.read_until(" players)")
 		self.write("connect %s %s" % (dong.config['username'], dong.config['password']))
+		time.sleep(1)
 		if dong.config['first_commands']:
 			for cmd in dong.config['first_commands']:
 				self.write(cmd)
 
 	def write(self, str):
 		if self.tn:
+			#try:
+			if self.debug:
+				print '> ' + str
 			self.tn.write(str + '\n')
+			#except: pass
 		else:
 			print 'No running telnet connection.'
 			sys.exit(1)
 			
 	def read_until(self, str):
 		if self.tn:
-			return self.tn.read_until(str)
+			derp = self.tn.read_until(str)
+			if self.debug:
+				print derp
+			return derp
 		else:
 			print 'No running telnet connection.'
 			sys.exit(1)
@@ -196,6 +206,10 @@ class Processor:
 			else:
 				con.write("-%s %s" % (caller, resp))
 
+
+		if caller == 'Dionysus' and line.startswith('puppet:'):
+			con.write("%s\n" % line[7:])
+
 		cmd = self.match_command(line)
 		if cmd:
 			# This removes the command from the line of text itself, leaving on the rest
@@ -234,6 +248,9 @@ class Processor:
 
 if __name__ == '__main__':
 	print "Starting up..."
+	opts = OptionParser()
+	opts.add_option('-d', '--debug', action='store_true', dest='debug', help='Enable stdout output', default=False)
+	(options, args) = opts.parse_args()
 	
 	dong = Dong()
 		
@@ -244,7 +261,7 @@ if __name__ == '__main__':
 	
 	parse_conf()
 	
-	con = TelnetConnector()
+	con = TelnetConnector(options.debug)
 	con.connect()
 	proc = Processor()
 	
