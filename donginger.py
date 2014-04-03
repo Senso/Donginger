@@ -8,6 +8,7 @@ import time
 import glob
 import telnetlib
 from datetime import datetime
+from optparse import OptionParser
 
 # Local imports
 import database
@@ -87,27 +88,36 @@ def load_config(file):
 	return config_json
 
 class TelnetConnector:
-	def __init__(self):
+	def __init__(self, debug):
+		self.debug = debug
 		self.tn = None
 	
 	def connect(self):
 		self.tn = telnetlib.Telnet(dong.config['host'], dong.config['port'])
-		self.read_until(" connected)")
+		self.read_until(" players)")
 		self.write("connect %s %s" % (dong.config['username'], dong.config['password']))
+		time.sleep(1)
 		if dong.config['first_commands']:
 			for cmd in dong.config['first_commands']:
 				self.write(cmd)
 
 	def write(self, str):
 		if self.tn:
+			#try:
+			if self.debug:
+				print '> ' + str
 			self.tn.write(str + '\n')
+			#except: pass
 		else:
 			print 'No running telnet connection.'
 			sys.exit(1)
 			
 	def read_until(self, str):
 		if self.tn:
-			return self.tn.read_until(str)
+			derp = self.tn.read_until(str)
+			if self.debug:
+				print derp
+			return derp
 		else:
 			print 'No running telnet connection.'
 			sys.exit(1)
@@ -118,12 +128,15 @@ class Processor:
 	
 	def __init__(self):
 		self.ansi_pat = re.compile('\033\[[0-9;]+m')
-		self.chat_pat = re.compile("\[(%s)\] (.+?) (says|asks|exclaims), \"(.+)\"" % '|'.join(dong.config['monitored_nets'].keys()))
+		#self.chat_pat = re.compile("\[(%s)\] \((.+?)\) (says|asks|exclaims), \"(.+)\"" % '|'.join(dong.config['monitored_nets'].keys()))
+		self.chat_pat = re.compile("\[(%s)\] (.+) (says|asks|exclaims), \"(.+)\"" % '|'.join(dong.config['monitored_nets'].keys()))
 		
 		# Line format is specific to each game/server and this will have to be adapted.
 		# In the case of HellMOO, the format is as follow:
 		# bot_objnum caller_name (caller_objnum) verb argstr
 		self.line_pat = re.compile('(\#[0-9]+) (.+) \((\#[0-9]+)\) (.+?) (.+)', re.I)
+		self.private_caller = None
+		self.private_msg = None
 		
 	def strip_ansi(self, str):
 		return self.ansi_pat.sub('', str)
@@ -134,6 +147,36 @@ class Processor:
 		buf = con.read_until('\n')
 		buf = buf.strip('\r\n')
 		buf = self.strip_ansi(buf)
+
+		## INTERRUPT EVERYTHING IF @PASTE-TO FOUND
+		privpat = "\-+Private message from (.+?)\-\-"
+		#privpat = "\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-Private message from (.+?)\-\-"
+		privmatch = re.search(privpat, buf)
+		if privmatch:
+			self.private_caller = privmatch.group(1)
+			self.private_msg = [buf]
+			return
+		if buf.find("--------------------------------end message") > -1:
+#			print 'dialogue:', self.private_msg
+			func = getattr(dong.plugins['pytoon'], 'main', None)
+			if func:
+#				print 'func called:', func
+				ret = func(self.private_caller, self.private_msg)
+#				self.private_caller = None
+#				self.private_msg = None
+#				print 'ret:', ret
+#				return ret
+				if ret:
+					con.write("-%s %s" % (self.private_caller, ret))
+				self.private_caller = None
+				self.private_msg = None
+			else:
+				self.private_caller = None
+				self.private_msg = None
+		if self.private_msg is not None:
+#			print 'appended:', buf
+			self.private_msg.append(buf)
+			return
 		
 		buf_match = re.search(self.line_pat, buf)
 		if buf_match:
@@ -143,19 +186,22 @@ class Processor:
 			line        = buf_match.group(5)
 		else:
 			return
-		
+	
 		# Avoid parsing anything done by the bot to prevent loops.
-		if caller_name == dong.config['username']:
+		if caller_name.lower() == dong.config['username'].lower():
 			return
-		
+		if caller_obj == '#359878':
+			return
+        
+
 		# Direct talk or paging shortcut
 		elif verb[0] in ('`', '-', '\'') and verb[1:].lower() in dong.config['aliases']:
 			if verb[0] == '\'':
 				verb = 'page'
 			else:
-				self.process_line(caller_name, line, caller_name)
+				self.process_line(caller_name, line, caller_name, obj=caller_obj)
 				return
-			
+	
 		# Proper paging using the 'page' command
 		# Quite an ugly hack
 		if verb == 'page':
@@ -164,28 +210,38 @@ class Processor:
 			for p in prefix:
 				line = re.sub("^%s " % p, '', line)
 	
-			self.process_line(caller_name, line, caller_name, page=True)
+			self.process_line(caller_name, line, caller_name, page=True, obj=caller_obj)
 
 		# This is for direct verb commands (ex. 'nudge')
 		elif verb in dong.commands:
-			self.process_line(caller_name, verb + ' ' + line, caller_name)
-		
-		# net (channel) talk	
+			self.process_line(caller_name, verb + ' ' + line, caller_name, obj=caller_obj)
+
+		elif verb == 'coinnet':
+			net_match = re.search(self.chat_pat, line)
+			self.process_line(caller_name, net_match.group(4), net_match.group(1), obj=caller_obj)
+			return
+	
+		# net (channel) talk
 		net_match = re.search(self.chat_pat, line)
 		if net_match:
-			self.process_line(caller_name, net_match.group(4), net_match.group(1))
+			self.process_line(caller_name, net_match.group(4), net_match.group(1), obj=caller_obj)
 
-	def dispatch(self, plugin, callback, line, caller, argstr):
+	def dispatch(self, plugin, callback, line, caller, argstr, obj):
 		"""Call the actual method on the plugin."""
 		
 		func = getattr(dong.plugins[plugin], callback, None)
 		if func:
-			return func(line, caller, argstr.strip())
+			# HACK for special twitter perms
+			if callback in ['post_tweet', 'riot_tweet',  
+				'random_tweet', 'add_tag', 'del_tag', 'add_target', 'del_target']:
+				return func(line, caller, argstr.strip(), obj)
+			else:
+				return func(line, caller, argstr.strip())
 			
 	def archive_line(self, channel, caller, line):
 		dong.db.insert(channel, {'time': datetime.now(), 'author': caller, 'message': line})
 			
-	def process_line(self, caller, line, source, page=False):
+	def process_line(self, caller, line, source, page=False, obj=None):
 		"""Find if a command is triggered and do post-dispatch processing."""
 		
 		def spew(resp):
@@ -196,11 +252,16 @@ class Processor:
 			else:
 				con.write("-%s %s" % (caller, resp))
 
+		if caller == 'Dionysus' and line.startswith('puppet:'):
+			print 'puppet cmd:', line[7:]
+			con.write("%s\n" % line[7:])
+			return
+
 		cmd = self.match_command(line)
 		if cmd:
 			# This removes the command from the line of text itself, leaving on the rest
 			argstr = line[len(cmd):]
-			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], line, caller, argstr)
+			response = self.dispatch(dong.commands[cmd][0], dong.commands[cmd][1], line, caller, argstr, obj)
 			
 			if type(response) == tuple:
 				for r_line in response:
@@ -215,18 +276,23 @@ class Processor:
 			
 	def match_command(self, line):
 		for cmd in dong.commands.keys():
+
 			# wildcards in commands
 			if cmd.find('<%>') > -1:
 				cmd_match = re.search(cmd.replace('<%>', '(.+)'), line)
 				if cmd_match:
 					return cmd
 
+			# Second pass at standard regex
+			elif re.search(cmd, line):
+				return cmd
+
 			# Priority to commands matching the exact name
-			elif line.split()[0] == cmd:
+			elif line.split()[0].strip() == cmd:
 				return cmd
 			
 			# Standard: line starts with the command
-			elif line.startswith(cmd):
+			elif line.strip().startswith(cmd):
 				return cmd
 			
 		return None
@@ -234,6 +300,9 @@ class Processor:
 
 if __name__ == '__main__':
 	print "Starting up..."
+	opts = OptionParser()
+	opts.add_option('-d', '--debug', action='store_true', dest='debug', help='Enable stdout output', default=False)
+	(options, args) = opts.parse_args()
 	
 	dong = Dong()
 		
@@ -244,7 +313,7 @@ if __name__ == '__main__':
 	
 	parse_conf()
 	
-	con = TelnetConnector()
+	con = TelnetConnector(options.debug)
 	con.connect()
 	proc = Processor()
 	
