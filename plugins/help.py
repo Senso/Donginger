@@ -15,11 +15,18 @@ class Help(Plugin):
 				doc = func.__doc__
 				if doc:
 					return "Help for %s: %s" % (cmd, doc)
-				else:
-					return "No help for %s" % cmd
+				#else:
+				#	return "No help for %s" % cmd
 			except:
-				return "Command not found: %s" % cmd
+				pass
+				#return "Command not found: %s" % cmd
 		else:
-			cmd_list = ', '.join(self.dong.commands.keys())
+			cmds = self.dong.commands.keys()
+			clean_cmds = []
+			for x in cmds:
+				x = x.strip('$')
+				x = x.strip('^')
+				clean_cmds.append(x)
+			cmd_list = ', '.join(clean_cmds)
 			return "Available commands: %s" % cmd_list
 		

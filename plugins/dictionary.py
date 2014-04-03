@@ -7,12 +7,16 @@ class Dictionary(Plugin):
 
 	def urban(self, callback, who, arg):
 		"""Search on urbandictionary.com"""
-
-		url = 'http://www.urbandictionary.com/iphone/search/define'
+		#print arg
+		if arg == 'random':
+			url = 'http://api.urbandictionary.com/v0/random'
+		else:
+			url = 'http://www.urbandictionary.com/iphone/search/define'
 		page = self.get_json(url, params={'term': arg})
 		defs = page['list']
+		#print 'HURR', defs
 
-		if page['result_type'] == 'no_results':
+		if arg != 'random' and page['result_type'] == 'no_results':
 			return 'not found.'
 		
 		if defs:

@@ -10,7 +10,7 @@ class Bitcoin(Plugin):
 	def bitcoin(self, callback, who, loc):
 		"""Gets the current exchange rate for bitcoins from mtgox."""
 		
-		data = self.get_json("https://mtgox.com/code/data/ticker.php")
+		data = self.get_json("https://btc-e.com/api/2/btc_usd/ticker")
 		ticker = data['ticker']
 		return "Current: $%(buy).2f - High: $%(high).2f" \
 			" - Low: $%(low).2f - Volume: %(vol)s" % ticker
